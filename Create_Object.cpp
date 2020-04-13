@@ -32,10 +32,14 @@ void Set_Red_Car(SDL_Texture* &car, SDL_Renderer* renderer){
     }
 }
 void Set_Blue_Car(SDL_Texture* &car, SDL_Renderer* renderer){
+    //SDL_Surface* surface = nullptr;
+    //surface = IMG_Load(blue_car.c_str());
+    //car = SDL_CreateTextureFromSurface(renderer, surface);
     car = IMG_LoadTexture(renderer, blue_car.c_str());
     if( car == nullptr){
         IMGError_Prinft("Blue Car loading failed: ");
     }
+    //SDL_FreeSurface(surface);
 }
 
 void Set_Red_Score(SDL_Texture* &score, SDL_Renderer* renderer){

@@ -22,7 +22,6 @@ const string blue_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Objec
 const string red_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Red.png";
 const string blue_score = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/BlueScore.png";
 const string red_score = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/RedScore.png";
-
 void initIMG();
 void IMGError_Prinft(string error);
 void Set_Red_Car(SDL_Texture* &car, SDL_Renderer* renderer);
@@ -30,4 +29,4 @@ void Set_Clasic_Map(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Blue_Score(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Red_Score(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Blue_Car(SDL_Texture* &car, SDL_Renderer* renderer);
-#endif /* Create_Object_hpp */
+#endif 

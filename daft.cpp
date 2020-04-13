@@ -23,6 +23,7 @@ using namespace std;
 struct Car{
     SDL_Texture* texture = nullptr;
     SDL_Rect rect;
+    int x, y;
     void Texture_Destroy() const{
         SDL_DestroyTexture(texture);
     }
@@ -33,8 +34,8 @@ struct Car{
     Car(int _x, int _y){
         rect.w = CAR_WIDTH;
         rect.h = CAR_HEIGHT;
-        rect.x = _x;
-        rect.y = _y;
+        x = _x;
+        y = _y;
     }
 };
 struct Score{
@@ -52,8 +53,8 @@ struct Score{
     Score(int _x, int _y){
         rect.w = CAR_WIDTH;
         rect.h = CAR_WIDTH;
-        rect.x = _x;
-        rect.y = _y;
+        x = _x;
+        y = _y;
     }
 };
 int Random(int a, int b);
@@ -74,15 +75,13 @@ int main() {
     IMG_Quit();
 }
 int Random(int a, int b){
-    static int c=4;
-    srand(c);
-    int n = rand();
-    cout << "n " << n << endl;
+    static int c=0;
+    srand(rand()+c);
     c++;
     if(c>=1000){
         c = 0;
     }
-    return rand();
+    return rand()%a+b;
 }
 void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
     Car Blue_Car(55,650), Red_Car(250,650);
@@ -165,13 +164,12 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
             }
         }
         for(int i =0; i < 3; i++){
-            if(((Blue_Score[i].rect.x < Blue_Car.rect.x+CAR_WIDTH)&&(Blue_Score[i].rect.x+CAR_WIDTH > Blue_Car.rect.x))&&((Blue_Score[i].rect.y < Blue_Car.rect.y+CAR_HEIGHT)&&(Blue_Score[i].rect.y+CAR_WIDTH > Blue_Car.rect.y))){
-                Blue_Score[i].rect.y = SCREEN_HEIGHT;
-                cout << "a" << endl;
+            if(((Blue_Score[i].rect.x < Blue_Car.rect.x+CAR_WIDTH)||(Blue_Score[i].rect.x+CAR_WIDTH > Blue_Car.rect.x))&&((Blue_Score[i].rect.y < Blue_Car.rect.y+CAR_HEIGHT)||(Blue_Score[i].rect.y+CAR_WIDTH > Blue_Car.rect.y))){
+                Blue_Score[i].rect.x = SCREEN_HEIGHT;
                 Blue_Score[i].run = false;
             }
-            if(((Red_Score[i].rect.x < Red_Car.rect.x+CAR_WIDTH)&&(Red_Score[i].rect.x+CAR_WIDTH > Red_Car.rect.x))&&((Red_Score[i].rect.y < Red_Car.rect.y+CAR_HEIGHT)&&(Red_Score[i].rect.y+CAR_WIDTH > Red_Car.rect.y))){
-                           Red_Score[i].rect.y = SCREEN_HEIGHT;
+            if(((Red_Score[i].rect.x < Blue_Car.rect.x+CAR_WIDTH)||(Red_Score[i].rect.x+CAR_WIDTH > Blue_Car.rect.x))&&((Red_Score[i].rect.y < Blue_Car.rect.y+CAR_HEIGHT)||(Red_Score[i].rect.y+CAR_WIDTH > Blue_Car.rect.y))){
+                           Red_Score[i].rect.x = SCREEN_HEIGHT;
                            Red_Score[i].run = false;
                        }
             if(Blue_Score[i].run == true){
@@ -180,28 +178,20 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
             if(Red_Score[i].run == true){
                 Red_Score[i].rect.y += 10;
             }
-            if(Red_Score[i].rect.y < SCREEN_HEIGHT/3){
+            if(Red_Score[i].rect.y < SCREEN_WIDTH/2){
                 appearR = false;
             }
-            if(Blue_Score[i].rect.y < SCREEN_HEIGHT/3){
+            if(Blue_Score[i].rect.y < SCREEN_WIDTH/2){
                 appearB = false;
-            }
-            if(Blue_Score[i].rect.y > SCREEN_HEIGHT){
-                Blue_Score[i].run = false;
-            }
-            if(Red_Score[i].rect.y > SCREEN_HEIGHT){
-                Red_Score[i].run = false;
             }
         }
         if(appearR == true){
             for(int i =0; i < 3; i++){
                 if( Red_Score[i].run==false){
-                     int n =Random(1,3000);
-                    if(Random(1,100)%5 == 3){
-                        Red_Score[i].run =true;
-                        Red_Score[i].rect.x = n%2==0  ? 250 : 340;
-                        Red_Score[i].rect.y = 0;
-                    }
+                    Red_Score[i].run =true;
+                     int n =(Random(1,100)%2);
+                    Red_Score[i].rect.x = (n==1)  ? 250 : 340;
+                    Red_Score[i].rect.y = 0;
                     break;
                 }
             }
@@ -209,12 +199,10 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
         if(appearB == true){
             for(int i =0; i < 3; i++){
                 if( Blue_Score[i].run==false){
-                    int n =(Random(1,100));
-                    if(Random(1,100)%5 == 2){
-                        Blue_Score[i].run =true;
-                        Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
-                        Blue_Score[i].rect.y = 0;
-                    }
+                    Blue_Score[i].run =true;
+                    int n =(Random(1,100)%2);
+                    Blue_Score[i].rect.x = n==1  ? 250 : 340;
+                    Blue_Score[i].rect.y = 0;
                     break;
                 }
             }
