@@ -6,12 +6,12 @@
 //  Copyright © 2020 Võ Minh Quân. All rights reserved.
 //
 
-#include <iostream>
+/*#include <iostream>
 #include <vector>
 #include <cmath>
 #include <cstring>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+     #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <thread>
 #include <ctime>
@@ -270,4 +270,4 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h){
     if(h != 0){
         rect.h = h;
     }
-}
+}*/

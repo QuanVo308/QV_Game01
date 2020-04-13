@@ -37,7 +37,7 @@ struct Car{
         rect.y = _y;
     }
 };
-struct Score{
+struct Object{
     SDL_Texture* texture = nullptr;
     SDL_Rect rect;
     int x, y;
@@ -45,28 +45,35 @@ struct Score{
     void Texture_Destroy() const{
         SDL_DestroyTexture(texture);
     }
-    Score(){
+    Object(){
         rect.w = CAR_WIDTH;
         rect.h = CAR_WIDTH;
     };
-    Score(int _x, int _y){
+    Object(int _x, int _y){
         rect.w = CAR_WIDTH;
         rect.h = CAR_WIDTH;
         rect.x = _x;
         rect.y = _y;
     }
 };
+
+Object Blue_Score[3], Red_Score[3];
+Car Blue_Car(55,650), Red_Car(250,650);
+SDL_Texture* map = nullptr;
+
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
-void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map);
+void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*, SDL_Texture* map*/);
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
+void draw(SDL_Renderer* &renderer);
+
 int main() {
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
-    SDL_Texture* map = nullptr;
+    //SDL_Texture* map = nullptr;
     initSDL(window, renderer);
     initIMG();
-    Play_Game(window, renderer, map);
+    Play_Game(window, renderer/*, map*/);
     //end game
     waitUntilKeyPressed();
     quitSDL(window, renderer);
@@ -84,9 +91,9 @@ int Random(int a, int b){
     }
     return rand();
 }
-void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
-    Car Blue_Car(55,650), Red_Car(250,650);
-    Score Blue_Score[3], Red_Score[3];
+void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
+   // Car Blue_Car(55,650), Red_Car(250,650);
+   // Score Blue_Score[3], Red_Score[3];
     bool quit = false;
     bool l = false, r = false, u = false, dw = false;
     bool s = false, a = false, d = false, w = false;
@@ -104,19 +111,20 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, map, NULL, NULL);
+    /*SDL_RenderCopy(renderer, map, NULL, NULL);
     SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
     SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
     for(int i =0; i < 3; i++){
         SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
         SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
-       }
-    SDL_RenderPresent(renderer);
+       } */
+    draw(renderer);
+    //SDL_RenderPresent(renderer);
     int dw_check_right = -1, score = 0;
     bool check_dw = true;
     int s_check_right = -1;
     bool check_s = true;
-   
+    //waitUntilKeyPressed();
     while (!quit){
         bool appearR = true, appearB = true;
         if(e.type == SDL_QUIT){
@@ -197,7 +205,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
             for(int i =0; i < 3; i++){
                 if( Red_Score[i].run==false){
                      int n =Random(1,3000);
-                    if(Random(1,100)%5 == 3){
+                    if(Random(1,100)%10 == 3){
                         Red_Score[i].run =true;
                         Red_Score[i].rect.x = n%2==0  ? 250 : 340;
                         Red_Score[i].rect.y = 0;
@@ -210,7 +218,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
             for(int i =0; i < 3; i++){
                 if( Blue_Score[i].run==false){
                     int n =(Random(1,100));
-                    if(Random(1,100)%5 == 2){
+                    if(Random(1,100)%10 == 2){
                         Blue_Score[i].run =true;
                         Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
                         Blue_Score[i].rect.y = 0;
@@ -222,14 +230,15 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer, SDL_Texture* map){
         SDL_Delay(20);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, map, NULL, NULL);
+        /*SDL_RenderCopy(renderer, map, NULL, NULL);
         SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
         SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
         for(int i =0; i < 3; i++){
             SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
             SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
-            }
-        SDL_RenderPresent(renderer);
+            }*/
+        draw(renderer);
+        //SDL_RenderPresent(renderer);
         if(SDL_PollEvent(&e) == 0) continue;
         KEY_FREEMOVE_ACTION(e, quit, l, r, u, dw, s, a, d, w);
     }
@@ -282,4 +291,14 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h){
     if(h != 0){
         rect.h = h;
     }
+}
+void draw(SDL_Renderer* &renderer){
+    SDL_RenderCopy(renderer, map, NULL, NULL);
+    SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
+    SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
+    for(int i =0; i < 3; i++){
+        SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
+        SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
+       }
+    SDL_RenderPresent(renderer);
 }
