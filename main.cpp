@@ -58,7 +58,7 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
 void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*, SDL_Texture* map*/);
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
 void draw(SDL_Renderer* &renderer);
-void Object_move(bool &appearR , bool &appearB);
+void Point_move(bool &appearR , bool &appearB);
 
 int main() {
     SDL_Window* window = nullptr;
