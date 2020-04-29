@@ -58,6 +58,7 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
 void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*, SDL_Texture* map*/);
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
 void draw(SDL_Renderer* &renderer);
+void Object_move(bool &appearR , bool &appearB);
 
 int main() {
     SDL_Window* window = nullptr;
@@ -84,8 +85,6 @@ int Random(int a, int b){
     return rand();
 }
 void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
-   // Car Blue_Car(55,650), Red_Car(250,650);
-   // Score Blue_Score[3], Red_Score[3];
     bool quit = false;
     bool l = false, r = false, u = false, dw = false;
     bool s = false, a = false, d = false, w = false;
@@ -155,61 +154,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
                 }
             }
         }
-        for(int i =0; i < 3; i++){
-            if(((Blue_Score[i].rect.x < Blue_Car.rect.x+CAR_WIDTH)&&(Blue_Score[i].rect.x+CAR_WIDTH > Blue_Car.rect.x))&&((Blue_Score[i].rect.y < Blue_Car.rect.y+CAR_HEIGHT)&&(Blue_Score[i].rect.y+CAR_WIDTH > Blue_Car.rect.y))){
-                Blue_Score[i].rect.y = SCREEN_HEIGHT;
-                //cout << "a" << endl;
-                Blue_Score[i].run = false;
-            }
-            if(((Red_Score[i].rect.x < Red_Car.rect.x+CAR_WIDTH)&&(Red_Score[i].rect.x+CAR_WIDTH > Red_Car.rect.x))&&((Red_Score[i].rect.y < Red_Car.rect.y+CAR_HEIGHT)&&(Red_Score[i].rect.y+CAR_WIDTH > Red_Car.rect.y))){
-                           Red_Score[i].rect.y = SCREEN_HEIGHT;
-                           Red_Score[i].run = false;
-                       }
-            if(Blue_Score[i].run == true){
-                Blue_Score[i].rect.y += 10;
-            }
-            if(Red_Score[i].run == true){
-                Red_Score[i].rect.y += 10;
-            }
-            if(Red_Score[i].rect.y < SCREEN_HEIGHT/3){
-                appearR = false;
-            }
-            if(Blue_Score[i].rect.y < SCREEN_HEIGHT/3){
-                appearB = false;
-            }
-            if(Blue_Score[i].rect.y > SCREEN_HEIGHT){
-                Blue_Score[i].run = false;
-            }
-            if(Red_Score[i].rect.y > SCREEN_HEIGHT){
-                Red_Score[i].run = false;
-            }
-        }
-        if(appearR == true){
-            for(int i =0; i < 3; i++){
-                if( Red_Score[i].run==false){
-                     int n =Random(1,3000);
-                    if(Random(1,100)%10 == 3){
-                        Red_Score[i].run =true;
-                        Red_Score[i].rect.x = n%2==0  ? 250 : 340;
-                        Red_Score[i].rect.y = 0;
-                    }
-                    break;
-                }
-            }
-        }
-        if(appearB == true){
-            for(int i =0; i < 3; i++){
-                if( Blue_Score[i].run==false){
-                    int n =(Random(1,3000));
-                    if(Random(1,100)%10 == 2){
-                        Blue_Score[i].run =true;
-                        Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
-                        Blue_Score[i].rect.y = 0;
-                    }
-                    break;
-                }
-            }
-        }
+        Point_move(appearR ,appearB);
         SDL_Delay(20);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -276,4 +221,62 @@ void draw(SDL_Renderer* &renderer){
         SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
        }
     SDL_RenderPresent(renderer);
+}
+void Point_move(bool &appearR , bool &appearB){
+   // static bool appearR = true, appearB = true;
+    for(int i =0; i < 3; i++){
+               if(((Blue_Score[i].rect.x < Blue_Car.rect.x+CAR_WIDTH)&&(Blue_Score[i].rect.x+CAR_WIDTH > Blue_Car.rect.x))&&((Blue_Score[i].rect.y < Blue_Car.rect.y+CAR_HEIGHT)&&(Blue_Score[i].rect.y+CAR_WIDTH > Blue_Car.rect.y))){
+                   Blue_Score[i].rect.y = SCREEN_HEIGHT;
+                   //cout << "a" << endl;
+                   Blue_Score[i].run = false;
+               }
+               if(((Red_Score[i].rect.x < Red_Car.rect.x+CAR_WIDTH)&&(Red_Score[i].rect.x+CAR_WIDTH > Red_Car.rect.x))&&((Red_Score[i].rect.y < Red_Car.rect.y+CAR_HEIGHT)&&(Red_Score[i].rect.y+CAR_WIDTH > Red_Car.rect.y))){
+                              Red_Score[i].rect.y = SCREEN_HEIGHT;
+                              Red_Score[i].run = false;
+                          }
+               if(Blue_Score[i].run == true){
+                   Blue_Score[i].rect.y += 10;
+               }
+               if(Red_Score[i].run == true){
+                   Red_Score[i].rect.y += 10;
+               }
+               if(Red_Score[i].rect.y < SCREEN_HEIGHT/3){
+                   appearR = false;
+               }
+               if(Blue_Score[i].rect.y < SCREEN_HEIGHT/3){
+                   appearB = false;
+               }
+               if(Blue_Score[i].rect.y > SCREEN_HEIGHT){
+                   Blue_Score[i].run = false;
+               }
+               if(Red_Score[i].rect.y > SCREEN_HEIGHT){
+                   Red_Score[i].run = false;
+               }
+           }
+           if(appearR == true){
+               for(int i =0; i < 3; i++){
+                   if( Red_Score[i].run==false){
+                        int n =Random(1,3000);
+                       if(Random(1,100)%10 == 3){
+                           Red_Score[i].run =true;
+                           Red_Score[i].rect.x = n%2==0  ? 250 : 340;
+                           Red_Score[i].rect.y = 0;
+                       }
+                       break;
+                   }
+               }
+           }
+           if(appearB == true){
+               for(int i =0; i < 3; i++){
+                   if( Blue_Score[i].run==false){
+                       int n =(Random(1,3000));
+                       if(Random(1,100)%10 == 2){
+                           Blue_Score[i].run =true;
+                           Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
+                           Blue_Score[i].rect.y = 0;
+                       }
+                       break;
+                   }
+               }
+           }
 }
