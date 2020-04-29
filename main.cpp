@@ -1,11 +1,3 @@
-//
-//  main.cpp
-//  QV_Game01
-//
-//  Created by Võ Minh Quân on 4/6/20.
-//  Copyright © 2020 Võ Minh Quân. All rights reserved.
-//
-
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -84,7 +76,7 @@ int Random(int a, int b){
     static int c=4;
     srand(c);
     int n = rand();
-    cout << "n " << n << endl;
+    //cout << "n " << n << endl;
     c++;
     if(c>=1000){
         c = 0;
@@ -111,20 +103,11 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    /*SDL_RenderCopy(renderer, map, NULL, NULL);
-    SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
-    SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
-    for(int i =0; i < 3; i++){
-        SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
-        SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
-       } */
     draw(renderer);
-    //SDL_RenderPresent(renderer);
     int dw_check_right = -1, score = 0;
     bool check_dw = true;
     int s_check_right = -1;
     bool check_s = true;
-    //waitUntilKeyPressed();
     while (!quit){
         bool appearR = true, appearB = true;
         if(e.type == SDL_QUIT){
@@ -175,7 +158,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
         for(int i =0; i < 3; i++){
             if(((Blue_Score[i].rect.x < Blue_Car.rect.x+CAR_WIDTH)&&(Blue_Score[i].rect.x+CAR_WIDTH > Blue_Car.rect.x))&&((Blue_Score[i].rect.y < Blue_Car.rect.y+CAR_HEIGHT)&&(Blue_Score[i].rect.y+CAR_WIDTH > Blue_Car.rect.y))){
                 Blue_Score[i].rect.y = SCREEN_HEIGHT;
-                cout << "a" << endl;
+                //cout << "a" << endl;
                 Blue_Score[i].run = false;
             }
             if(((Red_Score[i].rect.x < Red_Car.rect.x+CAR_WIDTH)&&(Red_Score[i].rect.x+CAR_WIDTH > Red_Car.rect.x))&&((Red_Score[i].rect.y < Red_Car.rect.y+CAR_HEIGHT)&&(Red_Score[i].rect.y+CAR_WIDTH > Red_Car.rect.y))){
@@ -217,7 +200,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
         if(appearB == true){
             for(int i =0; i < 3; i++){
                 if( Blue_Score[i].run==false){
-                    int n =(Random(1,100));
+                    int n =(Random(1,3000));
                     if(Random(1,100)%10 == 2){
                         Blue_Score[i].run =true;
                         Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
@@ -230,15 +213,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
         SDL_Delay(20);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        /*SDL_RenderCopy(renderer, map, NULL, NULL);
-        SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
-        SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
-        for(int i =0; i < 3; i++){
-            SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
-            SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
-            }*/
         draw(renderer);
-        //SDL_RenderPresent(renderer);
         if(SDL_PollEvent(&e) == 0) continue;
         KEY_FREEMOVE_ACTION(e, quit, l, r, u, dw, s, a, d, w);
     }
