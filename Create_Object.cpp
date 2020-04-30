@@ -63,3 +63,16 @@ void Set_Clasic_Map(SDL_Texture* &map, SDL_Renderer* renderer){
     }
 }
 
+void Set_Blue_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
+    score = IMG_LoadTexture(renderer, blue_obs.c_str());
+    if( score == nullptr){
+        IMGError_Prinft("Blue Obstacle loading failed: ");
+    }
+}
+
+void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
+    score = IMG_LoadTexture(renderer, blue_obs.c_str());
+    if( score == nullptr){
+        IMGError_Prinft("Red Obstacle loading failed: ");
+    }
+}
