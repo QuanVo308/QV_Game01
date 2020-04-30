@@ -80,7 +80,6 @@ int Random(int a, int b){
     static int c=4;
     srand(c );
     c+=rand()%100+7;
-    //cout << n << endl;
     if(c>=9999999){
         c = rand()%100+1;
     }
