@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -56,7 +57,7 @@ SDL_Texture* map = nullptr;
 
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
-void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*, SDL_Texture* map*/);
+void Play_Game(SDL_Window* window, SDL_Renderer* renderer /*, SDL_Texture* map */);
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
 void draw(SDL_Renderer* &renderer);
 void Object_move(bool &appearR , bool &appearB);
@@ -161,9 +162,12 @@ void draw(SDL_Renderer* &renderer){
     SDL_RenderCopy(renderer, map, NULL, NULL);
     SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
     SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
+    
     for(int i =0; i < Obj_Quantity; i++){
         SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
         SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
+        SDL_RenderCopy(renderer, Red_Obs[i].texture, NULL, &Red_Obs[i].rect);
+        SDL_RenderCopy(renderer, Blue_Obs[i].texture, NULL, &Blue_Obs[i].rect);
        }
     SDL_RenderPresent(renderer);
 }
@@ -174,46 +178,113 @@ void Object_move(bool &appearR , bool &appearB){
                 Blue_Score[i].rect.y = SCREEN_HEIGHT;
                 Blue_Score[i].run = false;
             }
-            if( check_collision(Red_Car.rect, Red_Score[i].rect) ){
-                            Red_Score[i].rect.y = SCREEN_HEIGHT;
-                            Red_Score[i].run = false;
-                        }
-            if(Blue_Score[i].run == true){
-                Blue_Score[i].rect.y += Obj_Speed;
-            }
-            if(Red_Score[i].run == true){
-                Red_Score[i].rect.y += Obj_Speed;
-            }
-            if(Red_Score[i].rect.y < SCREEN_HEIGHT/5){
-                appearR = false;
-            }
-            if(Blue_Score[i].rect.y < SCREEN_HEIGHT/5){
-                appearB = false;
-            }
-            if(Blue_Score[i].rect.y > SCREEN_HEIGHT){
-                Blue_Score[i].run = false;
-            }
-            if(Red_Score[i].rect.y > SCREEN_HEIGHT){
-                Red_Score[i].run = false;
-            }
+        if( check_collision(Red_Car.rect, Red_Score[i].rect) ){
+                        Red_Score[i].rect.y = SCREEN_HEIGHT;
+                        Red_Score[i].run = false;
+                    }
+        if(Blue_Score[i].run == true){
+            Blue_Score[i].rect.y += Obj_Speed;
         }
+        if(Red_Score[i].run == true){
+            Red_Score[i].rect.y += Obj_Speed;
+        }
+        if(Red_Score[i].rect.y < SCREEN_HEIGHT/5){
+            appearR = false;
+        }
+        if(Blue_Score[i].rect.y < SCREEN_HEIGHT/5){
+            appearB = false;
+        }
+        if(Blue_Score[i].rect.y > SCREEN_HEIGHT){
+            Blue_Score[i].run = false;
+        }
+        if(Red_Score[i].rect.y > SCREEN_HEIGHT){
+            Red_Score[i].run = false;
+        }
+        if( check_collision(Blue_Car.rect, Blue_Obs[i].rect) ){
+                Blue_Obs[i].rect.y = SCREEN_HEIGHT;
+                Blue_Obs[i].run = false;
+            }
+        if( check_collision(Red_Car.rect, Red_Obs[i].rect) ){
+                        Red_Obs[i].rect.y = SCREEN_HEIGHT;
+                        Red_Obs[i].run = false;
+                    }
+        if(Blue_Obs[i].run == true){
+            Blue_Obs[i].rect.y += Obj_Speed;
+        }
+        if(Red_Obs[i].run == true){
+            Red_Obs[i].rect.y += Obj_Speed;
+        }
+        if(Red_Obs[i].rect.y < SCREEN_HEIGHT/4){
+            appearR = false;
+        }
+        if(Blue_Obs[i].rect.y < SCREEN_HEIGHT/4){
+            appearB = false;
+        }
+        if(Blue_Obs[i].rect.y > SCREEN_HEIGHT){
+            Blue_Obs[i].run = false;
+        }
+        if(Red_Obs[i].rect.y > SCREEN_HEIGHT){
+            Red_Obs[i].run = false;
+        }
+    }
     if(appearR == true){
         for(int i =0; i < Obj_Quantity; i++){
-            if( Red_Score[i].run==false){
+            if(Random(1,3000)%2==0){
+                if( Red_Score[i].run==false){
+                    if(Random(1,100)%10 == 3){
+                        int n =Random(1,100);
+                        Red_Score[i].run =true;
+                        Red_Score[i].rect.x = Random(1,300)%2==0  ? 250 : 340;
+                        Red_Score[i].rect.y = 0;
+                    }
+                    break;
+                }
+            } else {
+                if( Red_Obs[i].run==false){
+                    if(Random(1,100)%10 == 3){
+                        int n =Random(1,100);
+                        Red_Obs[i].run =true;
+                        Red_Obs[i].rect.x = Random(1,300)%2==0  ? 250 : 340;
+                        Red_Obs[i].rect.y = 0;
+                    }
+                    break;
+                }
+            }
+           /* if( Red_Score[i].run==false){
                 if(Random(1,100)%10 == 3){
                     int n =Random(1,100);
                     Red_Score[i].run =true;
-                    cout << n << endl;
                     Red_Score[i].rect.x = Random(1,300)%2==0  ? 250 : 340;
                     Red_Score[i].rect.y = 0;
                 }
                 break;
-            }
+            }*/
         }
     }
     if(appearB == true){
         for(int i =0; i < Obj_Quantity; i++){
-            if( Blue_Score[i].run==false){
+            if(Random(1,3000)%2==0){
+                if( Blue_Score[i].run==false){
+                    int n =(Random(1,3000));
+                    if(Random(1,100)%10 == 7){
+                        Blue_Score[i].run =true;
+                        Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
+                        Blue_Score[i].rect.y = 0;
+                    }
+                    break;
+                }
+            } else {
+                if( Blue_Obs[i].run==false){
+                    int n =(Random(1,3000));
+                    if(Random(1,100)%10 == 7){
+                        Blue_Obs[i].run =true;
+                        Blue_Obs[i].rect.x = n%2==0  ? 55 : 150;
+                        Blue_Obs[i].rect.y = 0;
+                    }
+                    break;
+                }
+            }
+           /* if( Blue_Score[i].run==false){
                 int n =(Random(1,3000));
                 if(Random(1,100)%10 == 7){
                     Blue_Score[i].run =true;
@@ -221,7 +292,7 @@ void Object_move(bool &appearR , bool &appearB){
                     Blue_Score[i].rect.y = 0;
                 }
                 break;
-            }
+            } */
         }
     }
 }
@@ -241,40 +312,40 @@ void Car_move(SDL_Event &e, bool &quit){
            } else {
                check_dw = true;
            }
-           if(check_dw == true){
-               if(dw_check_right == 1 && Red_Car.rect.x <340){
-                   Red_Car.rect.x += 20;
-                   if(Red_Car.rect.x >340){
-                       Red_Car.rect.x = 340;
-                   }
-               } else if( Red_Car.rect.x > 250 && dw_check_right == -1) {
-                   Red_Car.rect.x -= 20;
-                   if(Red_Car.rect.x <250){
-                       Red_Car.rect.x = 250;
-                   }
-               }
-           }
-           if(s){
-               if(check_s == true){
-                   s_check_right = s_check_right == -1 ? 1:-1;
-               }
-                   check_s = false;
-           } else {
-               check_s = true;
-           }
-           if(check_s == true){
-               if(s_check_right == 1 && Blue_Car.rect.x <340){
-                   Blue_Car.rect.x += 20;
-                   if(Blue_Car.rect.x >150){
-                       Blue_Car.rect.x = 150;
-                   }
-               } else if( Blue_Car.rect.x > 55 && s_check_right == -1) {
-                   Blue_Car.rect.x -= 20;
-                   if(Blue_Car.rect.x <55){
-                       Blue_Car.rect.x = 55;
-                   }
-               }
-           }
+    if(check_dw == true){
+        if(dw_check_right == 1 && Red_Car.rect.x <340){
+            Red_Car.rect.x += 20;
+            if(Red_Car.rect.x >340){
+                Red_Car.rect.x = 340;
+            }
+        } else if( Red_Car.rect.x > 250 && dw_check_right == -1) {
+            Red_Car.rect.x -= 20;
+            if(Red_Car.rect.x <250){
+                Red_Car.rect.x = 250;
+            }
+        }
+    }
+    if(s){
+        if(check_s == true){
+            s_check_right = s_check_right == -1 ? 1:-1;
+        }
+            check_s = false;
+    } else {
+        check_s = true;
+    }
+    if(check_s == true){
+        if(s_check_right == 1 && Blue_Car.rect.x <340){
+            Blue_Car.rect.x += 20;
+            if(Blue_Car.rect.x >150){
+                Blue_Car.rect.x = 150;
+            }
+        } else if( Blue_Car.rect.x > 55 && s_check_right == -1) {
+            Blue_Car.rect.x -= 20;
+            if(Blue_Car.rect.x <55){
+                Blue_Car.rect.x = 55;
+            }
+        }
+    }
     KEY_FREEMOVE_ACTION(e, quit, l, r, u, dw, s, a, d, w);
 }
 

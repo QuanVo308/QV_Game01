@@ -71,7 +71,7 @@ void Set_Blue_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
 }
 
 void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
-    score = IMG_LoadTexture(renderer, blue_obs.c_str());
+    score = IMG_LoadTexture(renderer, red_obs.c_str());
     if( score == nullptr){
         IMGError_Prinft("Red Obstacle loading failed: ");
     }
