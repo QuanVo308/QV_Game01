@@ -7,11 +7,7 @@
 //
 
 #include "Create_Object.hpp"
-#include <iostream>
-#include <cstring>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include "SetSDL.hpp"
 
 using namespace std;
 
@@ -76,3 +72,22 @@ void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
         IMGError_Prinft("Red Obstacle loading failed: ");
     }
 }
+/*void print_text(int size, Uint8 r, Uint8 g, Uint8 b   ){
+    text.gFont = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size );
+    if( text.gFont == NULL )
+       {
+           printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+       }
+       else
+       {
+           //Render text
+           text.color= { r, g, b };
+           if( !gTextTexture.loadFromRenderedText( "The quick brown fox jumps over the lazy dog ", textColor ) )
+           {
+               printf( "Failed to render text texture!\n" );
+               success = false;
+           }
+       }
+    
+}
+void loadRender */

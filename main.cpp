@@ -1,18 +1,9 @@
-
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <cstring>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <thread>
-#include <ctime>
-#include "SetSDL.hpp"
 #include "Create_Object.hpp"
 
 using namespace std;
-
+bool die;
+int score = 0;
+bool quit = false;
 struct Car{
     SDL_Texture* texture = nullptr;
     SDL_Rect rect;
@@ -57,7 +48,7 @@ SDL_Texture* map = nullptr;
 
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
-void Play_Game(SDL_Window* window, SDL_Renderer* renderer /*, SDL_Texture* map */);
+void Play_Game(SDL_Window* window, SDL_Renderer* renderer);
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
 void draw(SDL_Renderer* &renderer);
 void Object_move(bool &appearR , bool &appearB);
@@ -70,12 +61,16 @@ int main() {
     SDL_Renderer* renderer = nullptr;
     initSDL(window, renderer);
     initIMG();
+    initTTF();
     Play_Game(window, renderer);
     //end game
-    //waitUntilKeyPressed();
-    quitSDL(window, renderer);
+    if(die){
+        waitUntilKeyPressed();
+    }
     SDL_DestroyTexture(map);
+    quitSDL(window, renderer);
     IMG_Quit();
+    TTF_Quit();
 }
 int Random(int a, int b){
     static int c=4;
@@ -87,26 +82,27 @@ int Random(int a, int b){
     return rand()%b+a;
 }
 void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
-    bool quit = false;
+    quit = false;
     SDL_Event e;
     Set_Object(renderer);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     draw(renderer);
-    int score = 0;
+    score = 0;
     while (!quit){
         bool appearRS = true, appearBS = true;
-        bool appearRO = true, appearBO = true;
+    //    bool appearRO = true, appearBO = true;
         if(e.type == SDL_QUIT){
             quit = true;
         }
         Car_move(e, quit);
         Object_move(appearRS ,appearBS);
-        SDL_Delay(20);
+        SDL_Delay(10);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         draw(renderer);
         if(SDL_PollEvent(&e) == 0) continue;
+        cout << score << endl;
     }
    // end
     Blue_Car.Texture_Destroy();
@@ -172,26 +168,27 @@ void draw(SDL_Renderer* &renderer){
     SDL_RenderPresent(renderer);
 }
 void Object_move(bool &appearR , bool &appearB){
-    int Obj_Speed = 13;
     for(int i =0; i < Obj_Quantity; i++){
         if( check_collision(Blue_Car.rect, Blue_Score[i].rect) ){
-                Blue_Score[i].rect.y = SCREEN_HEIGHT;
-                Blue_Score[i].run = false;
-            }
+            Blue_Score[i].rect.y = SCREEN_HEIGHT;
+            Blue_Score[i].run = false;
+            score++;
+        }
         if( check_collision(Red_Car.rect, Red_Score[i].rect) ){
-                        Red_Score[i].rect.y = SCREEN_HEIGHT;
-                        Red_Score[i].run = false;
-                    }
+            Red_Score[i].rect.y = SCREEN_HEIGHT;
+            Red_Score[i].run = false;
+            score++;
+        }
         if(Blue_Score[i].run == true){
-            Blue_Score[i].rect.y += Obj_Speed;
+            Blue_Score[i].rect.y += Obj_Speed + score/30;
         }
         if(Red_Score[i].run == true){
-            Red_Score[i].rect.y += Obj_Speed;
+            Red_Score[i].rect.y += Obj_Speed + score/30;
         }
-        if(Red_Score[i].rect.y < SCREEN_HEIGHT/5){
+        if(Red_Score[i].rect.y < 2*SCREEN_HEIGHT/7){
             appearR = false;
         }
-        if(Blue_Score[i].rect.y < SCREEN_HEIGHT/5){
+        if(Blue_Score[i].rect.y < 2*SCREEN_HEIGHT/7){
             appearB = false;
         }
         if(Blue_Score[i].rect.y > SCREEN_HEIGHT){
@@ -201,23 +198,35 @@ void Object_move(bool &appearR , bool &appearB){
             Red_Score[i].run = false;
         }
         if( check_collision(Blue_Car.rect, Blue_Obs[i].rect) ){
-                Blue_Obs[i].rect.y = SCREEN_HEIGHT;
-                Blue_Obs[i].run = false;
+            Blue_Obs[i].run = false;
+            die = true;
+            quit = true;
+            if(Blue_Car.rect.x != Blue_Obs[i].rect.x && Blue_Obs[i].rect.x == 150){
+                Blue_Car.rect.x = Blue_Obs[i].rect.x - CAR_WIDTH+2;
+            } else if(Blue_Car.rect.x != Blue_Obs[i].rect.x && Blue_Obs[i].rect.x == 55){
+                Blue_Car.rect.x = Blue_Obs[i].rect.x + CAR_WIDTH-3;
             }
+        }
         if( check_collision(Red_Car.rect, Red_Obs[i].rect) ){
-                        Red_Obs[i].rect.y = SCREEN_HEIGHT;
-                        Red_Obs[i].run = false;
-                    }
+            Red_Obs[i].run = false;
+            die = true;
+            quit = true;
+            if(Red_Car.rect.x != Red_Obs[i].rect.x && Red_Obs[i].rect.x == 340){
+                Red_Car.rect.x = Red_Obs[i].rect.x - CAR_WIDTH+2;
+            } else if(Red_Car.rect.x != Red_Obs[i].rect.x && Red_Obs[i].rect.x == 250){
+                Red_Car.rect.x = Red_Obs[i].rect.x + CAR_WIDTH-3;
+            }
+        }
         if(Blue_Obs[i].run == true){
-            Blue_Obs[i].rect.y += Obj_Speed;
+            Blue_Obs[i].rect.y += Obj_Speed + score/30;
         }
         if(Red_Obs[i].run == true){
-            Red_Obs[i].rect.y += Obj_Speed;
+            Red_Obs[i].rect.y += Obj_Speed + score/30;
         }
-        if(Red_Obs[i].rect.y < SCREEN_HEIGHT/4){
+        if(Red_Obs[i].rect.y < 2*SCREEN_HEIGHT/7){
             appearR = false;
         }
-        if(Blue_Obs[i].rect.y < SCREEN_HEIGHT/4){
+        if(Blue_Obs[i].rect.y < 2*SCREEN_HEIGHT/7){
             appearB = false;
         }
         if(Blue_Obs[i].rect.y > SCREEN_HEIGHT){
@@ -232,7 +241,6 @@ void Object_move(bool &appearR , bool &appearB){
             if(Random(1,3000)%2==0){
                 if( Red_Score[i].run==false){
                     if(Random(1,100)%10 == 3){
-                        int n =Random(1,100);
                         Red_Score[i].run =true;
                         Red_Score[i].rect.x = Random(1,300)%2==0  ? 250 : 340;
                         Red_Score[i].rect.y = 0;
@@ -242,7 +250,6 @@ void Object_move(bool &appearR , bool &appearB){
             } else {
                 if( Red_Obs[i].run==false){
                     if(Random(1,100)%10 == 3){
-                        int n =Random(1,100);
                         Red_Obs[i].run =true;
                         Red_Obs[i].rect.x = Random(1,300)%2==0  ? 250 : 340;
                         Red_Obs[i].rect.y = 0;
@@ -250,49 +257,29 @@ void Object_move(bool &appearR , bool &appearB){
                     break;
                 }
             }
-           /* if( Red_Score[i].run==false){
-                if(Random(1,100)%10 == 3){
-                    int n =Random(1,100);
-                    Red_Score[i].run =true;
-                    Red_Score[i].rect.x = Random(1,300)%2==0  ? 250 : 340;
-                    Red_Score[i].rect.y = 0;
-                }
-                break;
-            }*/
         }
     }
     if(appearB == true){
         for(int i =0; i < Obj_Quantity; i++){
             if(Random(1,3000)%2==0){
                 if( Blue_Score[i].run==false){
-                    int n =(Random(1,3000));
                     if(Random(1,100)%10 == 7){
                         Blue_Score[i].run =true;
-                        Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
+                        Blue_Score[i].rect.x = Random(1,300)%2==0  ? 55 : 150;
                         Blue_Score[i].rect.y = 0;
                     }
                     break;
                 }
             } else {
                 if( Blue_Obs[i].run==false){
-                    int n =(Random(1,3000));
                     if(Random(1,100)%10 == 7){
                         Blue_Obs[i].run =true;
-                        Blue_Obs[i].rect.x = n%2==0  ? 55 : 150;
+                        Blue_Obs[i].rect.x = Random(1,300)%2==0  ? 55 : 150;
                         Blue_Obs[i].rect.y = 0;
                     }
                     break;
                 }
             }
-           /* if( Blue_Score[i].run==false){
-                int n =(Random(1,3000));
-                if(Random(1,100)%10 == 7){
-                    Blue_Score[i].run =true;
-                    Blue_Score[i].rect.x = n%2==0  ? 55 : 150;
-                    Blue_Score[i].rect.y = 0;
-                }
-                break;
-            } */
         }
     }
 }
@@ -305,13 +292,13 @@ void Car_move(SDL_Event &e, bool &quit){
     static int s_check_right = -1;
     static bool check_s = true;
     if(dw){
-               if(check_dw == true){
-                   dw_check_right = dw_check_right == -1 ? 1:-1;
-               }
-                   check_dw = false;
-           } else {
-               check_dw = true;
-           }
+        if(check_dw == true){
+            dw_check_right = dw_check_right == -1 ? 1:-1;
+        }
+            check_dw = false;
+    } else {
+        check_dw = true;
+    }
     if(check_dw == true){
         if(dw_check_right == 1 && Red_Car.rect.x <340){
             Red_Car.rect.x += 20;

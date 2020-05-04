@@ -9,14 +9,53 @@
 #ifndef Create_Object_hpp
 #define Create_Object_hpp
 
-#include <iostream>
-#include <cstring>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include "SetSDL.hpp"
 
 using namespace std;
+struct Text{
+    TTF_Font *gFont = nullptr;
+    SDL_Texture *texture = nullptr;
+    SDL_Rect rect;
+    SDL_Color color;
+    void Destroy(){
+        TTF_CloseFont( gFont );
+        SDL_DestroyTexture(texture);
+    }
+    void free(){
+        SDL_DestroyTexture(texture);
+    }
+   /* void loadFromRenderedText(string textureText, ){
+        free();
 
+          //Render text surface
+        SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), color );
+          if( textSurface == NULL )
+          {
+              printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+          }
+          else
+          {
+              //Create texture from surface pixels
+              mTexture = SDL_CreateTextureFromSurface( renderer, textSurface );
+              if( mTexture == NULL )
+              {
+                  printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+              }
+              else
+              {
+                  //Get image dimensions
+                  mWidth = textSurface->w;
+                  mHeight = textSurface->h;
+              }
+
+              //Get rid of old surface
+              SDL_FreeSurface( textSurface );
+          }
+          
+          //Return success
+          return mTexture != NULL;
+    } */
+};
 const string classic_map = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/Classic_Map2.png";
 const string blue_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Blue.png";
 const string red_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Red.png";
@@ -25,6 +64,8 @@ const string red_score = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Obje
 const string red_obs = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/RedObs.png";
 const string blue_obs = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/BlueObs.png";
 const int Obj_Quantity = 10;
+const int Obj_Speed = 7;
+//Text text;
 void initIMG();
 void IMGError_Prinft(string error);
 void Set_Red_Car(SDL_Texture* &car, SDL_Renderer* renderer);
@@ -34,4 +75,5 @@ void Set_Red_Score(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Blue_Car(SDL_Texture* &car, SDL_Renderer* renderer);
 void Set_Blue_Obs(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer);
+
 #endif 

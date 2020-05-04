@@ -10,7 +10,15 @@
 #define SetSDL_hpp
 
 #include <iostream>
+#include <vector>
+#include <cmath>
+#include <cstring>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <thread>
+#include <ctime>
+
 using namespace std;
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 800;
@@ -21,5 +29,6 @@ void waitUntilKeyPressed();
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
 void logSDLError(ostream& os, const string &msg, bool fatal = false);
 void initSDL(SDL_Window* &window, SDL_Renderer* &renderer);
+void initTTF();
 
 #endif /* SetSDL_hpp */

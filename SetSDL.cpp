@@ -8,7 +8,15 @@
 
 #include "SetSDL.hpp"
 #include <iostream>
+#include <vector>
+#include <cmath>
+#include <cstring>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <thread>
+#include <ctime>
+
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer)
 {
@@ -50,5 +58,10 @@ void waitUntilKeyPressed(){
         }
 
         SDL_Delay(100);
+    }
+}
+void initTTF(){
+    if( TTF_Init() == -1 ){
+        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
     }
 }
