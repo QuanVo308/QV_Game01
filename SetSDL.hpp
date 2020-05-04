@@ -21,7 +21,7 @@
 
 using namespace std;
 const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_HEIGHT = 850;
 const int CAR_WIDTH = 50;
 const int CAR_HEIGHT = 100;
 const string WINDOW_TITLE = "Two Cars";

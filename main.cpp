@@ -45,25 +45,28 @@ Object Blue_Score[Obj_Quantity], Red_Score[Obj_Quantity];
 Object Blue_Obs[Obj_Quantity], Red_Obs[Obj_Quantity];
 Car Blue_Car(55,650), Red_Car(250,650);
 SDL_Texture* map = nullptr;
+Text text;
+SDL_Window* window = nullptr;
+SDL_Renderer* renderer = nullptr;
 
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
-void Play_Game(SDL_Window* window, SDL_Renderer* renderer);
+void Play_Game();
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
-void draw(SDL_Renderer* &renderer);
+void draw();
 void Object_move(bool &appearR , bool &appearB);
 void Car_move(SDL_Event &e, bool &quit);
 bool check_collision(SDL_Rect a, SDL_Rect b);
-void Set_Object( SDL_Renderer * renderer);
+void Set_Object();
+void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, int y, double zoom );
 
 int main() {
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
     initSDL(window, renderer);
     initIMG();
     initTTF();
-    Play_Game(window, renderer);
+    Play_Game();
     //end game
+    print_text(20, 255, 255, 255, "SCORE", 20, 20, 1);
     if(die){
         waitUntilKeyPressed();
     }
@@ -81,13 +84,13 @@ int Random(int a, int b){
     }
     return rand()%b+a;
 }
-void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
+void Play_Game(){
     quit = false;
     SDL_Event e;
-    Set_Object(renderer);
+    Set_Object();
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    draw(renderer);
+    draw();
     score = 0;
     while (!quit){
         bool appearRS = true, appearBS = true;
@@ -100,7 +103,7 @@ void Play_Game(SDL_Window* window, SDL_Renderer* renderer/*,SDL_Texture* map*/){
         SDL_Delay(10);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        draw(renderer);
+        draw();
         if(SDL_PollEvent(&e) == 0) continue;
         cout << score << endl;
     }
@@ -154,7 +157,7 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h){
         rect.h = h;
     }
 }
-void draw(SDL_Renderer* &renderer){
+void draw(){
     SDL_RenderCopy(renderer, map, NULL, NULL);
     SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
     SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
@@ -212,7 +215,7 @@ void Object_move(bool &appearR , bool &appearB){
             die = true;
             quit = true;
             if(Red_Car.rect.x != Red_Obs[i].rect.x && Red_Obs[i].rect.x == 340){
-                Red_Car.rect.x = Red_Obs[i].rect.x - CAR_WIDTH+2;
+                Red_Car.rect.x = Red_Obs[i].rect.x - CAR_WIDTH+5;
             } else if(Red_Car.rect.x != Red_Obs[i].rect.x && Red_Obs[i].rect.x == 250){
                 Red_Car.rect.x = Red_Obs[i].rect.x + CAR_WIDTH-3;
             }
@@ -344,7 +347,7 @@ bool check_collision(SDL_Rect a, SDL_Rect b){
     }
 }
 
-void Set_Object( SDL_Renderer * renderer){
+void Set_Object(){
     Set_Red_Car(Red_Car.texture, renderer);
     Set_Blue_Car(Blue_Car.texture, renderer);
     Set_Clasic_Map(map, renderer);
@@ -361,4 +364,26 @@ void Set_Object( SDL_Renderer * renderer){
         Set_Rect(Blue_Obs[i].rect, 55, SCREEN_HEIGHT, CAR_WIDTH, CAR_WIDTH); //  x1 55  x2 150
         
     }
+}
+void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, int y, double zoom ){
+    text.gFont = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size_text );
+    if( text.gFont == NULL )
+       {
+           printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+       }
+       else
+       {
+           //Render text
+           text.color= { r, g, b };
+           if( text.loadFromRenderedText( gText, text.color, renderer ) )
+           {
+               printf( "Failed to render text texture!\n" );
+           }
+       }
+    text.rect.w/=zoom;
+    text.rect.h/=zoom;
+    text.rect.x=x;
+    text.rect.y=y;
+    SDL_RenderCopy(renderer, text.texture, nullptr, &text.rect);
+    SDL_RenderPresent(renderer);
 }

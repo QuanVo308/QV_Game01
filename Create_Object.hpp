@@ -14,7 +14,7 @@
 using namespace std;
 struct Text{
     TTF_Font *gFont = nullptr;
-    SDL_Texture *texture = nullptr;
+    SDL_Texture *texture;
     SDL_Rect rect;
     SDL_Color color;
     void Destroy(){
@@ -24,7 +24,7 @@ struct Text{
     void free(){
         SDL_DestroyTexture(texture);
     }
-   /* void loadFromRenderedText(string textureText, ){
+    bool loadFromRenderedText(string textureText, SDL_Color color, SDL_Renderer *renderer ){
         free();
 
           //Render text surface
@@ -36,25 +36,25 @@ struct Text{
           else
           {
               //Create texture from surface pixels
-              mTexture = SDL_CreateTextureFromSurface( renderer, textSurface );
-              if( mTexture == NULL )
+              texture = SDL_CreateTextureFromSurface( renderer, textSurface );
+              if( texture == nullptr )
               {
                   printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
               }
               else
               {
                   //Get image dimensions
-                  mWidth = textSurface->w;
-                  mHeight = textSurface->h;
+                  rect.w = textSurface->w;
+                  rect.h = textSurface->h;
               }
 
               //Get rid of old surface
               SDL_FreeSurface( textSurface );
           }
-          
+        
           //Return success
-          return mTexture != NULL;
-    } */
+          return texture != nullptr;
+    }
 };
 const string classic_map = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/Classic_Map2.png";
 const string blue_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Blue.png";

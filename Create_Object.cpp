@@ -10,7 +10,7 @@
 #include "SetSDL.hpp"
 
 using namespace std;
-
+//Text text;
 void initIMG(){
     int imgFlags = IMG_INIT_PNG;
         if( !( IMG_Init( imgFlags ) & imgFlags ) )
@@ -89,5 +89,5 @@ void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
            }
        }
     
-}
-void loadRender */
+} */
+
