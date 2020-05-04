@@ -72,22 +72,39 @@ void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
         IMGError_Prinft("Red Obstacle loading failed: ");
     }
 }
-/*void print_text(int size, Uint8 r, Uint8 g, Uint8 b   ){
-    text.gFont = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size );
-    if( text.gFont == NULL )
-       {
-           printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
-       }
-       else
-       {
-           //Render text
-           text.color= { r, g, b };
-           if( !gTextTexture.loadFromRenderedText( "The quick brown fox jumps over the lazy dog ", textColor ) )
-           {
-               printf( "Failed to render text texture!\n" );
-               success = false;
-           }
-       }
+void Text::Destroy(){
+    TTF_CloseFont( gFont );
+    SDL_DestroyTexture(texture);
+}
+void Text::free(){
+    SDL_DestroyTexture(texture);
+}
+bool Text::loadFromRenderedText(string textureText, SDL_Color color, SDL_Renderer *renderer ){
+    free();
+        //Render text surface
+    SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), color );
+    if( textSurface == NULL )
+    {
+        printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+    }
+    else
+    {
+        //Create texture from surface pixels
+        texture = SDL_CreateTextureFromSurface( renderer, textSurface );
+        if( texture == nullptr )
+        {
+            printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
+        }
+        else
+        {
+            //Get image dimensions
+            rect.w = textSurface->w;
+            rect.h = textSurface->h;
+        }
+        //Get rid of old surface
+        SDL_FreeSurface( textSurface );
+    }
     
-} */
-
+    //Return success
+    return texture != nullptr;
+}
