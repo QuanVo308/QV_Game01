@@ -104,6 +104,7 @@ void Play_Game(){
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         draw();
+         
         if(SDL_PollEvent(&e) == 0) continue;
         cout << score << endl;
     }
@@ -168,6 +169,7 @@ void draw(){
         SDL_RenderCopy(renderer, Red_Obs[i].texture, NULL, &Red_Obs[i].rect);
         SDL_RenderCopy(renderer, Blue_Obs[i].texture, NULL, &Blue_Obs[i].rect);
        }
+    print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
     SDL_RenderPresent(renderer);
 }
 void Object_move(bool &appearR , bool &appearB){
@@ -380,10 +382,10 @@ void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, 
                printf( "Failed to render text texture!\n" );
            }
        }
-    text.rect.w/=zoom;
-    text.rect.h/=zoom;
+    text.rect.w*=zoom;
+    text.rect.h*=zoom;
     text.rect.x=x;
     text.rect.y=y;
     SDL_RenderCopy(renderer, text.texture, nullptr, &text.rect);
-    SDL_RenderPresent(renderer);
+   // SDL_RenderPresent(renderer);
 }
