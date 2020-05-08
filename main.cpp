@@ -48,6 +48,7 @@ SDL_Texture* map = nullptr;
 Text text;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
+//TTF_Font TTF_score = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size_text );
 
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
@@ -70,6 +71,7 @@ int main() {
     if(die){
         waitUntilKeyPressed();
     }
+    text.Destroy();
     SDL_DestroyTexture(map);
     quitSDL(window, renderer);
     IMG_Quit();
@@ -106,7 +108,7 @@ void Play_Game(){
         draw();
          
         if(SDL_PollEvent(&e) == 0) continue;
-        cout << score << endl;
+        cout << "Score: " << score << endl;
     }
    // end
     Blue_Car.Texture_Destroy();
@@ -170,6 +172,8 @@ void draw(){
         SDL_RenderCopy(renderer, Blue_Obs[i].texture, NULL, &Blue_Obs[i].rect);
        }
     print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
+    print_text(20, 255, 255, 255, to_string(score), 420, 400, 1.5);
+
     SDL_RenderPresent(renderer);
 }
 void Object_move(bool &appearR , bool &appearB){
@@ -368,24 +372,35 @@ void Set_Object(){
     }
 }
 void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, int y, double zoom ){
-    text.gFont = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size_text );
+    TTF_Font *t = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size_text );
+    text.gFont = t;
     if( text.gFont == NULL )
        {
            printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+           //waitUntilKeyPressed();
+           //cout << size_text << endl;
        }
        else
        {
            //Render text
            text.color= { r, g, b };
-           if( text.loadFromRenderedText( gText, text.color, renderer ) )
+           if( !text.loadFromRenderedText( gText, text.color, renderer ) )
            {
                printf( "Failed to render text texture!\n" );
            }
        }
     text.rect.w*=zoom;
     text.rect.h*=zoom;
+    //text.rect.w=33;
+     //text.rect.h=28;
     text.rect.x=x;
     text.rect.y=y;
+   // cout << text.rect.x << " " << text.rect.y << " " << text.rect.w << " " << text.rect.h << endl;
+    
     SDL_RenderCopy(renderer, text.texture, nullptr, &text.rect);
+    //TTF_CloseFont( text.gFont );
+    TTF_CloseFont( t );
+          t  = nullptr;
+     text.gFont  = nullptr;
    // SDL_RenderPresent(renderer);
 }

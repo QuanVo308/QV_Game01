@@ -17,6 +17,7 @@ struct Text{
     SDL_Texture *texture;
     SDL_Rect rect;
     SDL_Color color;
+    
     void Destroy();
     void free();
     bool loadFromRenderedText(string textureText, SDL_Color color, SDL_Renderer *renderer );
