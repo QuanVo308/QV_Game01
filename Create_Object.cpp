@@ -72,39 +72,3 @@ void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
         IMGError_Prinft("Red Obstacle loading failed: ");
     }
 }
-void Text::Destroy(){
-    TTF_CloseFont( gFont );
-    SDL_DestroyTexture(texture);
-}
-void Text::free(){
-    SDL_DestroyTexture(texture);
-}
-bool Text::loadFromRenderedText(string textureText, SDL_Color color, SDL_Renderer *renderer ){
-    free();
-        //Render text surface
-    SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), color );
-    if( textSurface == NULL )
-    {
-        printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
-    }
-    else
-    {
-        //Create texture from surface pixels
-        texture = SDL_CreateTextureFromSurface( renderer, textSurface );
-        if( texture == nullptr )
-        {
-            printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
-        }
-        else
-        {
-            //Get image dimensions
-            rect.w = textSurface->w;
-            rect.h = textSurface->h;
-        }
-        //Get rid of old surface
-        SDL_FreeSurface( textSurface );
-    }
-    
-    //Return success
-    return texture != nullptr;
-}

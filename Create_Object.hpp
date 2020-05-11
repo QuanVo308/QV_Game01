@@ -12,15 +12,42 @@
 #include "SetSDL.hpp"
 
 using namespace std;
-struct Text{
-    TTF_Font *gFont = nullptr;
-    SDL_Texture *texture;
+struct Car{
+    SDL_Texture* texture = nullptr;
     SDL_Rect rect;
-    SDL_Color color;
-    
-    void Destroy();
-    void free();
-    bool loadFromRenderedText(string textureText, SDL_Color color, SDL_Renderer *renderer );
+    double angle;
+    void Texture_Destroy() const{
+        SDL_DestroyTexture(texture);
+    }
+    Car(){
+        rect.w = CAR_WIDTH;
+        rect.h = CAR_HEIGHT;
+    };
+    Car(int _x, int _y){
+        rect.w = CAR_WIDTH;
+        rect.h = CAR_HEIGHT;
+        rect.x = _x;
+        rect.y = _y;
+    }
+};
+struct Object{
+    SDL_Texture* texture = nullptr;
+    SDL_Rect rect;
+    int x, y;
+    bool run = false;
+    void Texture_Destroy() const{
+        SDL_DestroyTexture(texture);
+    }
+    Object(){
+        rect.w = CAR_WIDTH;
+        rect.h = CAR_WIDTH;
+    };
+    Object(int _x, int _y){
+        rect.w = CAR_WIDTH;
+        rect.h = CAR_WIDTH;
+        rect.x = _x;
+        rect.y = _y;
+    }
 };
 const string classic_map = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/Classic_Map2.png";
 const string blue_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Blue.png";

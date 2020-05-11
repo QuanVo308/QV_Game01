@@ -20,6 +20,16 @@
 #include <ctime>
 
 using namespace std;
+struct Text{
+    TTF_Font *gFont = nullptr;
+    SDL_Texture *texture;
+    SDL_Rect rect;
+    SDL_Color color;
+    
+    void Destroy();
+    void free();
+    bool loadFromRenderedText(string textureText, SDL_Color color, SDL_Renderer *renderer );
+};
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 850;
 const int CAR_WIDTH = 50;
