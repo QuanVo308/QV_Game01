@@ -5,6 +5,7 @@ using namespace std;
 bool die;
 int score = 0;
 bool quit = false;
+bool quitgame = false, pause = false;
 Object Blue_Score[Obj_Quantity], Red_Score[Obj_Quantity];
 Object Blue_Obs[Obj_Quantity], Red_Obs[Obj_Quantity];
 Car Blue_Car(55,650), Red_Car(250,650);
@@ -30,9 +31,10 @@ int main() {
     initSDL(window, renderer);
     initIMG();
     initTTF();
+    Set_Object();
+    //start()
     Play_Game();
     //end game
-    print_text(20, 255, 255, 255, "SCORE", 20, 20, 1);
     if(die){
         waitUntilKeyPressed();
     }
@@ -55,7 +57,7 @@ int Random(int a, int b){
 void Play_Game(){
     quit = false;
     SDL_Event e;
-    Set_Object();
+    
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     draw();
@@ -132,7 +134,7 @@ void draw(){
         SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, nullptr, SDL_FLIP_NONE);
         SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle, nullptr, SDL_FLIP_NONE);
     } else {
-       waitUntilKeyPressed();
+      // waitUntilKeyPressed();
     }
     
     for(int i =0; i < Obj_Quantity; i++){
@@ -415,7 +417,7 @@ void fix_Bposition_collision(Object Blue_Obs){
         Blue_Car.rect.x += 3;
         SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
         Blue_Car.rect.x -= 3;
-    } else if (Blue_Obs.rect.x == 150) {
+    } else if (Blue_Obs.rect.x > Blue_Car.rect.x) {
         if(Blue_Car.rect.y >= Blue_Obs.rect.y + CAR_WIDTH-10){
             SDL_Point t;
             Blue_Car.rect.y -=1;
@@ -482,18 +484,19 @@ void fix_Bposition_collision(Object Blue_Obs){
 void fix_Rposition_collision(Object Red_Obs){
     Red_Car.rect.h+=30;
     Red_Car.rect.w-=6;
-    if(Red_Car.angle == 0){
+    if(Red_Car.angle == 0 && (Red_Car.rect.x == 250 -3|| Red_Car.rect.x == 340-3)){
+        cout << "Collision" << endl ;
         Red_Car.rect.x += 3;
         SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
         Red_Car.rect.x -= 3;
-    } else if (Red_Obs.rect.x == 250) {
+    } else if (Red_Obs.rect.x > Red_Car.rect.x) {
         if(Red_Car.rect.y >= Red_Obs.rect.y + CAR_WIDTH-10){
             SDL_Point t;
-            Red_Car.rect.y -=1;
-            Red_Car.rect.x += 13;
+            Red_Car.rect.y -=3;
+            Red_Car.rect.x += 20;
             t.x = Red_Obs.rect.x - Red_Car.rect.x;
             t.y =  0;
-            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle, &t, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
             cout << "collision1" << endl;
         } else if(Red_Car.rect.y < Red_Obs.rect.y + CAR_WIDTH && Red_Car.rect.y > Red_Obs.rect.y-10){
            // SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle, nullptr, SDL_FLIP_NONE);
@@ -501,53 +504,59 @@ void fix_Rposition_collision(Object Red_Obs){
            // waitUntilKeyPressed();
             SDL_Point t;
             Red_Car.rect.y +=13;
-            Red_Car.rect.x += 11;
+            Red_Car.rect.x += 9;
             t.x = CAR_WIDTH;
             t.y = 0;
             cout << t.x << " " << t.y << endl;
-            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-12, &t, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
             cout << "collision2" << endl;
         } else {
             SDL_Point t;
-            Red_Car.rect.y +=20;
-            Red_Car.rect.x += 8;
+            Red_Car.rect.y +=5;
+            Red_Car.rect.x += 1;
             /*t.x = -Red_Obs.rect.x + 2*Red_Car.rect.x;
             t.y = (Red_Obs.rect.y - Red_Car.rect.y) > 0 ? Red_Obs.rect.y - Red_Car.rect.y : 0; */
             t.x = CAR_WIDTH - (Red_Car.rect.x+CAR_WIDTH - Red_Obs.rect.x);
             t.y = Red_Obs.rect.y - Red_Car.rect.y;
             cout << t.x << " " << t.y << endl;
-            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-12, &t, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
             cout << "collision3" << endl;
         }
     } else {
        if(Red_Car.rect.y >= Red_Obs.rect.y + CAR_WIDTH-10){
             SDL_Point t;
-            Red_Car.rect.y +=2;
-            Red_Car.rect.x -= 10;
+            Red_Car.rect.y +=5;
+            Red_Car.rect.x -= 16;
             t.x = -Red_Car.rect.x + Red_Obs.rect.x + CAR_WIDTH-3;
             t.y = 0;
-            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-12, &t, SDL_FLIP_NONE);
             cout << "collision1" << endl;
         } else if(Red_Car.rect.y < Red_Obs.rect.y + CAR_WIDTH && Red_Car.rect.y > Red_Obs.rect.y-10){
             SDL_Point t;
             Red_Car.rect.y +=13;
-            Red_Car.rect.x -= 6;
+            Red_Car.rect.x -= 2;
             t.x = 0;
             t.y = 0;
             cout << t.x << " " << t.y << endl;
-            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-12, &t, SDL_FLIP_NONE);
             cout << "collision2" << endl;
         } else {
             SDL_Point t;
-            Red_Car.rect.y +=13;
-            Red_Car.rect.x -= 3;
+            Red_Car.rect.y +=12;
+            Red_Car.rect.x += 3;
             t.x = -Red_Car.rect.x+CAR_WIDTH + Red_Obs.rect.x;
             t.y = Red_Obs.rect.y - Red_Car.rect.y ;
             cout << t.x << " " << t.y << endl;
-            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-12, &t, SDL_FLIP_NONE);
             cout << "collision3" << endl;
         }
     }
     SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, nullptr, SDL_FLIP_NONE);
 }
+/*void Mouse_Event(SDL_Event e, int &x, int &y){
+    if(e.type == SDL_MOUSEBUTTONDOWN){
+        SDL_GetMouseState(&x,&y);
+        cout << "Mouse: " << x << " " << y << endl;
+    }
+}*/
 
