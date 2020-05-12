@@ -72,3 +72,51 @@ void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer){
         IMGError_Prinft("Red Obstacle loading failed: ");
     }
 }
+void Set_Menu(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, menu.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("Menu loading failed: ");
+    }
+}
+void Set_Begin(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, Begin.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("Begin loading failed: ");
+    }
+}
+void Set_Mute(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, mute.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("mute loading failed: ");
+    }
+}
+void Set_Unmute(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, unmute.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("unmute loading failed: ");
+    }
+}
+void Set_Play(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, play.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("play loading failed: ");
+    }
+}
+void Set_Playagain(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, playagain.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("playagain loading failed: ");
+    }
+}
+void Set_Home(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, home.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("home loading failed: ");
+    }
+}
+void Set_Help(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, help.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("help loading failed: ");
+    }
+}

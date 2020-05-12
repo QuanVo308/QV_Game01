@@ -50,12 +50,21 @@ struct Object{
     }
 };
 const string classic_map = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/Classic_Map2.png";
+const string menu = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/menu.png";
+const string Begin = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/begin.jpg";
 const string blue_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Blue.png";
 const string red_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Red.png";
 const string blue_score = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/BlueScore.png";
 const string red_score = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/RedScore.png";
 const string red_obs = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/RedObs.png";
 const string blue_obs = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/BlueObs.png";
+const string mute = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/mute.png";
+const string home = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/home.png";
+const string unmute = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/unmute.png";
+const string playagain = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/playagain.png";
+const string play = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/play.png";
+const string help = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/help.png";
+
 const int Obj_Quantity = 10;
 const int Obj_Speed = 7;
 //Text text;
@@ -68,5 +77,13 @@ void Set_Red_Score(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Blue_Car(SDL_Texture* &car, SDL_Renderer* renderer);
 void Set_Blue_Obs(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Red_Obs(SDL_Texture* &score, SDL_Renderer* renderer);
+void Set_Menu(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Begin(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Mute(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Unmute(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Home(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Play(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Playagain(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Help(SDL_Texture* &map, SDL_Renderer* renderer);
 
 #endif 
