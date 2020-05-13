@@ -31,6 +31,8 @@ void fix_Rposition_collision(Object Red_Obs);
 void Mouse_Event(SDL_Event e, int &x, int &y);
 void draw_begin();
 void draw_menu();
+void draw_menu_pause();
+void draw_menu_lose();
 
 int main() {
     initSDL(window, renderer);
@@ -40,7 +42,7 @@ int main() {
     draw_begin();
     waitUntilKeyPressed();
     //SDL_Delay(3000);
-    draw_menu();
+    draw_menu_lose();
     waitUntilKeyPressed();
     Play_Game();
     //end game
@@ -431,9 +433,6 @@ void fix_Bposition_collision(Object Blue_Obs){
             SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, &t, SDL_FLIP_NONE);
             cout << "collision1" << endl;
         } else if(Blue_Car.rect.y < Blue_Obs.rect.y + CAR_WIDTH && Blue_Car.rect.y > Blue_Obs.rect.y-15){
-           // SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, nullptr, SDL_FLIP_NONE);
-           // draw();
-           // waitUntilKeyPressed();
             SDL_Point t;
             Blue_Car.rect.y +=13;
             Blue_Car.rect.x += 11;
@@ -446,8 +445,6 @@ void fix_Bposition_collision(Object Blue_Obs){
             SDL_Point t;
             Blue_Car.rect.y +=20;
             Blue_Car.rect.x += 8;
-            /*t.x = -Blue_Obs.rect.x + 2*Blue_Car.rect.x;
-            t.y = (Blue_Obs.rect.y - Blue_Car.rect.y) > 0 ? Blue_Obs.rect.y - Blue_Car.rect.y : 0; */
             t.x = CAR_WIDTH - (Blue_Car.rect.x+CAR_WIDTH - Blue_Obs.rect.x);
             t.y = Blue_Obs.rect.y - Blue_Car.rect.y;
             cout << t.x << " " << t.y << endl;
@@ -503,9 +500,6 @@ void fix_Rposition_collision(Object Red_Obs){
             SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+12, &t, SDL_FLIP_NONE);
             cout << "collision1" << endl;
         } else if(Red_Car.rect.y < Red_Obs.rect.y + CAR_WIDTH && Red_Car.rect.y > Red_Obs.rect.y-10){
-           // SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle, nullptr, SDL_FLIP_NONE);
-           // draw();
-           // waitUntilKeyPressed();
             SDL_Point t;
             Red_Car.rect.y +=13;
             Red_Car.rect.x += 9;
@@ -518,8 +512,6 @@ void fix_Rposition_collision(Object Red_Obs){
             SDL_Point t;
             Red_Car.rect.y +=5;
             Red_Car.rect.x += 1;
-            /*t.x = -Red_Obs.rect.x + 2*Red_Car.rect.x;
-            t.y = (Red_Obs.rect.y - Red_Car.rect.y) > 0 ? Red_Obs.rect.y - Red_Car.rect.y : 0; */
             t.x = CAR_WIDTH - (Red_Car.rect.x+CAR_WIDTH - Red_Obs.rect.x);
             t.y = Red_Obs.rect.y - Red_Car.rect.y;
             cout << t.x << " " << t.y << endl;
@@ -637,9 +629,51 @@ void draw_menu_pause(){
     SDL_SetRenderDrawColor(renderer, 0,0, 0, 70);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderFillRect(renderer, &s);
-    SDL_Rect play = {180,250,250,250}, mute = {380,530,100,100},help = {100,530,100,100}, sound = {250,530,100,100};
+    SDL_Rect playagain = {205,430,200,200}, play = {205,200,200,200}, mute = {390,660,100,100},help = {110,660,100,100}, sound = {260,660,100,100};
+    Set_Playagain(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &playagain);
+    t = nullptr;
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
+    t = nullptr;
+    Set_Help(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &help);
+    t = nullptr;
+    if(!music){
+        Set_Musicon(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        t = nullptr;
+    } else {
+        Set_Musicoff(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        t = nullptr;
+    }
+    if(!Sound){
+        Set_Unmute(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &sound);
+        t = nullptr;
+    } else {
+        Set_Mute(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &sound);
+        t = nullptr;
+    }
+    SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(t);
+    SDL_RenderClear(renderer);
+}
+void draw_menu_lose(){
+    SDL_Texture* t;
+    SDL_Rect s;
+    s.x = 0;
+    s.y = 0;
+    s.w = SCREEN_WIDTH;
+    s.h = SCREEN_HEIGHT;
+    SDL_SetRenderDrawColor(renderer, 0,0, 0, 70);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_RenderFillRect(renderer, &s);
+    SDL_Rect playagain = {205,430,200,200}, mute = {390,660,100,100},help = {110,660,100,100}, sound = {260,660,100,100};
+    Set_Playagain(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &playagain);
     t = nullptr;
     Set_Help(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &help);
