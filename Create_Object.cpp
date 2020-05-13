@@ -120,3 +120,16 @@ void Set_Help(SDL_Texture* &map, SDL_Renderer* renderer){
         IMGError_Prinft("help loading failed: ");
     }
 }
+void Set_Musicon(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, musicon.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("musicon loading failed: ");
+    }
+}
+void Set_Musicoff(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, musicoff.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("musicoff loading failed: ");
+    }
+}
+

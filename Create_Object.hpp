@@ -50,7 +50,7 @@ struct Object{
     }
 };
 const string classic_map = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/Classic_Map2.png";
-const string menu = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/menu.png";
+const string menu = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/menu.jpg";
 const string Begin = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/begin.jpg";
 const string blue_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Blue.png";
 const string red_car = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Object/Red.png";
@@ -64,6 +64,8 @@ const string unmute = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/
 const string playagain = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/playagain.png";
 const string play = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/play.png";
 const string help = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/help.png";
+const string musicon = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/music.png";
+const string musicoff = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/musicoff.png";
 
 const int Obj_Quantity = 10;
 const int Obj_Speed = 7;
@@ -85,5 +87,8 @@ void Set_Home(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Play(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Playagain(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Help(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Musicon(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Musicoff(SDL_Texture* &map, SDL_Renderer* renderer);
+
 
 #endif 

@@ -7,6 +7,7 @@ int score = 0;
 bool quit = false;
 bool quitgame = false, pause = false;
 bool music = true;
+bool Sound = true;
 Object Blue_Score[Obj_Quantity], Red_Score[Obj_Quantity];
 Object Blue_Obs[Obj_Quantity], Red_Obs[Obj_Quantity];
 Car Blue_Car(55,650), Red_Car(250,650);
@@ -38,14 +39,10 @@ int main() {
     Set_Object();
     draw_begin();
     waitUntilKeyPressed();
+    //SDL_Delay(3000);
     draw_menu();
     waitUntilKeyPressed();
-   // while(!quitgame){
-        
-      Play_Game();
-   // }
-    //start()
-   
+    Play_Game();
     //end game
     if(die){
         waitUntilKeyPressed();
@@ -88,7 +85,9 @@ void Play_Game(){
         if(SDL_PollEvent(&e) == 0) continue;
         cout << "Score: " << score << endl;
     }
-   // end
+    
+    
+   // end game
     Blue_Car.Texture_Destroy();
     Red_Car.Texture_Destroy();
     for(int i=0; i < Obj_Quantity ;i++){
@@ -139,7 +138,6 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h){
     }
 }
 void draw(){
-    
     //SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
     //SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
     if(!die){
@@ -157,9 +155,7 @@ void draw(){
        }
     print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
     print_text(20, 255, 255, 255, to_string(score), 420, 400, 1.5);
-
     SDL_RenderPresent(renderer);
-    //if(die) waitUntilKeyPressed();
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, map, NULL, NULL);
@@ -194,6 +190,7 @@ void Object_move(bool &appearR , bool &appearB){
         if(Red_Score[i].rect.y > SCREEN_HEIGHT){
             Red_Score[i].run = false;
         }
+        // Blue car collision
         Blue_Car.rect.x-=3;
         Blue_Car.rect.h-=30;
         Blue_Car.rect.w+=6;
@@ -207,6 +204,7 @@ void Object_move(bool &appearR , bool &appearB){
             Blue_Car.rect.w-=6;
         }
         Blue_Car.rect.x+=3;
+        // Red car collision
         Red_Car.rect.x-=3;
         Red_Car.rect.h-=30;
         Red_Car.rect.w+=6;
@@ -409,18 +407,12 @@ void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, 
        }
     text.rect.w*=zoom;
     text.rect.h*=zoom;
-    //text.rect.w=33;
-     //text.rect.h=28;
     text.rect.x=x;
     text.rect.y=y;
-   // cout << text.rect.x << " " << text.rect.y << " " << text.rect.w << " " << text.rect.h << endl;
-    
     SDL_RenderCopy(renderer, text.texture, nullptr, &text.rect);
-    //TTF_CloseFont( text.gFont );
     TTF_CloseFont( t );
-          t  = nullptr;
-     text.gFont  = nullptr;
-   // SDL_RenderPresent(renderer);
+    t  = nullptr;
+    text.gFont  = nullptr;
 }
 void fix_Bposition_collision(Object Blue_Obs){
     Blue_Car.rect.h+=30;
@@ -591,21 +583,87 @@ void draw_begin(){
 }
 void draw_menu(){
     SDL_Texture* t;
-    Set_Menu(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, nullptr);
-    SDL_Rect play = {180,350,250,250}, mute = {100,100,100,100}, unmute = {550,800,50,50}, help = {0,800,50,50};
+    SDL_Rect s;
+    Set_Clasic_Map(t, renderer);
+    //SDL_RenderCopy(renderer, t, nullptr, nullptr);
+    // t=nullptr;
+    //Set_Object();
+    SDL_RenderCopy(renderer, t, NULL, NULL);
+    SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
+    SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
+    s.x = 0;
+    s.y = 0;
+    s.w = SCREEN_WIDTH;
+    s.h = SCREEN_HEIGHT;
+    SDL_SetRenderDrawColor(renderer, 0,0, 0, 70);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_RenderFillRect(renderer, &s);
+    SDL_Rect play = {180,250,250,250}, mute = {380,530,100,100},help = {100,530,100,100}, sound = {250,530,100,100};
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
     t = nullptr;
     Set_Help(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &help);
     t = nullptr;
-    if(music){
+    if(!music){
+        Set_Musicon(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        t = nullptr;
+    } else {
+        Set_Musicoff(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        t = nullptr;
+    }
+    if(!Sound){
         Set_Unmute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &unmute);
+        SDL_RenderCopy(renderer, t, nullptr, &sound);
+        t = nullptr;
+    } else {
+        Set_Mute(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &sound);
         t = nullptr;
     }
     SDL_RenderPresent(renderer);
     SDL_DestroyTexture(t);
+    SDL_RenderClear(renderer);
+}
+void draw_menu_pause(){
+    SDL_Texture* t;
+    SDL_Rect s;
+    s.x = 0;
+    s.y = 0;
+    s.w = SCREEN_WIDTH;
+    s.h = SCREEN_HEIGHT;
+    SDL_SetRenderDrawColor(renderer, 0,0, 0, 70);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_RenderFillRect(renderer, &s);
+    SDL_Rect play = {180,250,250,250}, mute = {380,530,100,100},help = {100,530,100,100}, sound = {250,530,100,100};
+    Set_Play(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &play);
+    t = nullptr;
+    Set_Help(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &help);
+    t = nullptr;
+    if(!music){
+        Set_Musicon(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        t = nullptr;
+    } else {
+        Set_Musicoff(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        t = nullptr;
+    }
+    if(!Sound){
+        Set_Unmute(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &sound);
+        t = nullptr;
+    } else {
+        Set_Mute(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &sound);
+        t = nullptr;
+    }
+    SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(t);
+    SDL_RenderClear(renderer);
 }
 
