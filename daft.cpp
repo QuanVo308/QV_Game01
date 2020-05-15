@@ -60,3 +60,26 @@
  }
 
  */
+/*
+ int main() {
+     initSDL(window, renderer);
+     initIMG();
+     initTTF();
+     Set_Object();
+     draw_begin();
+     waitUntilKeyPressed();
+     //SDL_Delay(3000);
+     draw_menu_lose();
+     waitUntilKeyPressed();
+     Play_Game();
+     //end game
+     if(die){
+         waitUntilKeyPressed();
+     }
+     text.Destroy();
+     SDL_DestroyTexture(map);
+     quitSDL(window, renderer);
+     IMG_Quit();
+     TTF_Quit();
+ }
+ */

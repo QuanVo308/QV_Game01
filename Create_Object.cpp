@@ -132,4 +132,10 @@ void Set_Musicoff(SDL_Texture* &map, SDL_Renderer* renderer){
         IMGError_Prinft("musicoff loading failed: ");
     }
 }
+void Set_Quitgame(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, Quitgame.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("Quitgame loading failed: ");
+    }
+}
 

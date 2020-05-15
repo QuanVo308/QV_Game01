@@ -35,6 +35,7 @@ const int SCREEN_HEIGHT = 850;
 const int CAR_WIDTH = 50;
 const int CAR_HEIGHT = 100;
 const string WINDOW_TITLE = "Two Cars";
+
 void waitUntilKeyPressed();
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
 void logSDLError(ostream& os, const string &msg, bool fatal = false);
