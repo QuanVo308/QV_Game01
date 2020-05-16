@@ -41,6 +41,7 @@ void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, 
 void fix_Bposition_collision(Object Blue_Obs);
 void fix_Rposition_collision(Object Red_Obs);
 void Mouse_Event(SDL_Event e, int &x, int &y);
+void draw_menu_basic_option();
 void draw_begin();
 void draw_menu();
 void draw_menu_pause();
@@ -670,34 +671,11 @@ void draw_menu(){
     SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderFillRect(renderer, &s);
-    SDL_Rect play = {180,250,250,250}, mute = {390,660,100,100},help = {110,660,100,100}, Sound = {260,660,100,100}, QuitGame = {20,20, 40, 40};
+    SDL_Rect play = {180,250,250,250};
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
     t = nullptr;
-    Set_Help(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &help);
-    t = nullptr;
-    Set_Quitgame(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &QuitGame);
-    t = nullptr;
-    if(!music){
-        Set_Musicon(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &mute);
-        t = nullptr;
-    } else {
-        Set_Musicoff(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &mute);
-        t = nullptr;
-    }
-    if(!sound){
-        Set_Unmute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &Sound);
-        t = nullptr;
-    } else {
-        Set_Mute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &Sound);
-        t = nullptr;
-    }
+    draw_menu_basic_option();
     SDL_RenderPresent(renderer);
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
@@ -712,37 +690,14 @@ void draw_menu_pause(){
     SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderFillRect(renderer, &s);
-    SDL_Rect playagain = {205,430,200,200}, play = {205,200,200,200}, mute = {390,660,100,100},help = {110,660,100,100}, Sound = {260,660,100,100},QuitGame = {20,20, 40, 40};
+    SDL_Rect playagain = {205,430,200,200}, play = {205,200,200,200};
     Set_Playagain(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &playagain);
-    t = nullptr;
-    Set_Quitgame(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &QuitGame);
     t = nullptr;
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
     t = nullptr;
-    Set_Help(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &help);
-    t = nullptr;
-    if(!music){
-        Set_Musicon(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &mute);
-        t = nullptr;
-    } else {
-        Set_Musicoff(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &mute);
-        t = nullptr;
-    }
-    if(!sound){
-        Set_Unmute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &Sound);
-        t = nullptr;
-    } else {
-        Set_Mute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &Sound);
-        t = nullptr;
-    }
+    draw_menu_basic_option();
     SDL_RenderPresent(renderer);
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
@@ -757,19 +712,21 @@ void draw_menu_lose(){
     SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderFillRect(renderer, &s);
-    SDL_Rect playagain = {205,430,200,200}, mute = {390,660,100,100},help = {110,660,100,100}, Sound = {260,660,100,100}, home = {205,200,200,200},QuitGame = {20,20, 40, 40};
+    SDL_Rect playagain = {205,430,200,200}, home = {205,200,200,200};
     Set_Playagain(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &playagain);
     t = nullptr;
     Set_Home(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &home);
     t = nullptr;
-    Set_Quitgame(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &QuitGame);
-    t = nullptr;
-    Set_Help(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &help);
-    t = nullptr;
+    draw_menu_basic_option();
+    SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(t);
+    SDL_RenderClear(renderer);
+}
+void draw_menu_basic_option(){
+    SDL_Texture* t;
+    SDL_Rect  mute = {390,660,100,100},help = {110,660,100,100}, Sound = {260,660,100,100}, QuitGame = {20,20, 40, 40};
     if(!music){
         Set_Musicon(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &mute);
@@ -788,9 +745,13 @@ void draw_menu_lose(){
         SDL_RenderCopy(renderer, t, nullptr, &Sound);
         t = nullptr;
     }
-    SDL_RenderPresent(renderer);
+    Set_Help(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &help);
+    t = nullptr;
+    Set_Quitgame(t, renderer);
+    SDL_RenderCopy(renderer, t, nullptr, &QuitGame);
+    t = nullptr;
     SDL_DestroyTexture(t);
-    SDL_RenderClear(renderer);
 }
 void check_menu_mouse(SDL_Event &e){
     

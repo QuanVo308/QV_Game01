@@ -67,6 +67,8 @@ const string help = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/he
 const string musicon = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/music.png";
 const string musicoff = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/musicoff.png";
 const string Quitgame = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/quit.png";
+const string tutorial = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/help.png";
+const string back = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/back.png";
 
 const int Obj_Quantity = 10;
 const int Obj_Speed = 7;
@@ -92,6 +94,8 @@ void Set_Help(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Musicon(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Musicoff(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Quitgame(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Tutorial(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Back(SDL_Texture* &map, SDL_Renderer* renderer);
 
 
 #endif 

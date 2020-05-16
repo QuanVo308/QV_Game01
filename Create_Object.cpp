@@ -138,4 +138,17 @@ void Set_Quitgame(SDL_Texture* &map, SDL_Renderer* renderer){
         IMGError_Prinft("Quitgame loading failed: ");
     }
 }
+void Set_Tutorial(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, tutorial.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("Tutortial loading failed: ");
+    }
+}
+void Set_Back(SDL_Texture* &map, SDL_Renderer* renderer){
+    map = IMG_LoadTexture(renderer, back.c_str());
+    if( map == nullptr){
+        IMGError_Prinft("Back loading failed: ");
+    }
+}
+
 
