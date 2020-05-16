@@ -12,6 +12,10 @@
 #include "SetSDL.hpp"
 
 using namespace std;
+
+const int CAR_WIDTH = 50;
+const int CAR_HEIGHT = 100;
+
 struct Car{
     SDL_Texture* texture = nullptr;
     SDL_Rect rect;
@@ -72,7 +76,13 @@ const string back = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/ba
 
 const int Obj_Quantity = 10;
 const int Obj_Speed = 7;
-
+const int Car_Angle_Change = 12;
+const int Car_x_Change = 15;
+const int LR_Line = 250;
+const int RR_Line = 340;
+const int LB_Line = 55;
+const int RB_Line = 150;
+const int Car_y = 650;
 //Text text;
 void initIMG();
 void IMGError_Prinft(string error);
