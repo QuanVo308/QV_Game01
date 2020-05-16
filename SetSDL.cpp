@@ -57,7 +57,7 @@ void waitUntilKeyPressed(){
             return;
         }
 
-        SDL_Delay(100);
+        SDL_Delay(20);
     }
 }
 void initTTF(){

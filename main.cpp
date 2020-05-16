@@ -14,8 +14,8 @@ enum Button{
     NOTHING,
 };
 Button Mouse;
-bool die;
-int score = 0;
+bool die, chose;
+int score = 0, mouse_x, mouse_y;
 bool quit = false;
 bool quitgame = false, pause = false;
 bool music = true;
@@ -27,6 +27,7 @@ SDL_Texture* map = nullptr;
 Text text;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
+SDL_Rect  Rmute = {390,660,100,100},Rhelp = {110,660,100,100}, RSound = {260,660,100,100}, RQuitGame = {20,20, 40, 40}, RBack = {240, 660, 100, 100};
 
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
@@ -40,14 +41,15 @@ void Set_Object();
 void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, int y, double zoom );
 void fix_Bposition_collision(Object Blue_Obs);
 void fix_Rposition_collision(Object Red_Obs);
-void Mouse_Event(SDL_Event e, int &x, int &y);
+void Mouse_Event(SDL_Event e);
+void draw_tutorial();
+void check_click_basic_button();
 void draw_menu_basic_option();
 void draw_begin();
 void draw_menu();
 void draw_menu_pause();
 void draw_menu_lose();
-void check_menu_mouse(SDL_Event &e); //chua lam
-
+bool check_click_mouse(SDL_Rect s);
 
 int main() {
     initSDL(window, renderer);
@@ -56,11 +58,11 @@ int main() {
     Set_Object();
     draw_begin();
     waitUntilKeyPressed();
-    /*while(!quitgame){
+    SDL_Event e;
+    while(!quitgame){
         draw_menu();
-        waitUntilKeyPressed();
-        SDL_Event e; //cho vao draw luon
-        check_menu_mouse(e);
+        //waitUntilKeyPressed();
+        //cho vao draw luon
         switch(Mouse){
             case PLAY:
                 Play_Game();
@@ -70,8 +72,8 @@ int main() {
                 break;
             default: break;
         }
-    } */
-    draw();
+    }
+   /* draw();
     draw_menu();
     waitUntilKeyPressed();
     draw();
@@ -80,7 +82,7 @@ int main() {
     draw();
     draw_menu_lose();
     waitUntilKeyPressed();
-    Play_Game();
+    Play_Game(); */
     //end game
     if(die){
         waitUntilKeyPressed();
@@ -457,7 +459,7 @@ bool check_collision(SDL_Rect a, SDL_Rect b){
 void Set_Object(){
     Set_Red_Car(Red_Car.texture, renderer);
     Set_Blue_Car(Blue_Car.texture, renderer);
-    Set_Clasic_Map(map, renderer);
+    Set_Classic_Map(map, renderer);
     for(int i=0;i < Obj_Quantity; i++){
         Set_Blue_Score(Blue_Score[i].texture, renderer);
         Set_Red_Score(Red_Score[i].texture, renderer);
@@ -630,11 +632,29 @@ void fix_Rposition_collision(Object Red_Obs){
     }
     SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, nullptr, SDL_FLIP_NONE);
 }
-void Mouse_Event(SDL_Event e, int &x, int &y){
-    if(e.type == SDL_MOUSEBUTTONDOWN){
-        SDL_GetMouseState(&x,&y);
-        cout << "Mouse: " << x << " " << y << endl;
-    }
+void Mouse_Event(SDL_Event e){
+   // SDL_Event e;
+    bool check = false;
+    mouse_x = 0;
+    mouse_y = 0;
+    while(!check){
+        if(e.type == SDL_MOUSEBUTTONDOWN) {
+            cout << "ha" << endl;
+        }
+        if(SDL_WaitEvent(&e)){
+            if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_QUIT){
+            mouse_x = e.motion.x;
+            mouse_y = e.motion.y;
+              check = true;
+                 cout << "Mouse: " << mouse_x << " " << mouse_y << endl;
+            }
+            }
+        }
+        //if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_QUIT){
+               //SDL_GetMouseState(&mouse_x,&mouse_y);
+               
+   // }
+   
 }
 void draw_begin(){
     SDL_Texture* t;
@@ -657,10 +677,9 @@ void draw_begin(){
 void draw_menu(){
     SDL_Texture* t;
     SDL_Rect s;
-    Set_Clasic_Map(t, renderer);
-    //SDL_RenderCopy(renderer, t, nullptr, nullptr);
-    // t=nullptr;
-    //Set_Object();
+    SDL_Event e;
+    chose = false;
+    Set_Classic_Map(t, renderer);
     SDL_RenderCopy(renderer, t, NULL, NULL);
     SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
     SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
@@ -675,11 +694,33 @@ void draw_menu(){
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
     t = nullptr;
-    /*Set_Tutorial(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, nullptr);
-    t = nullptr;*/
     draw_menu_basic_option();
     SDL_RenderPresent(renderer);
+    while(chose != true){
+        cout << "a" << endl;
+        Mouse = NOTHING;
+        chose = false;
+        Mouse_Event(e);
+        if(check_click_mouse(play)){
+            chose = true;
+            Mouse = PLAY;
+        }
+        Set_Classic_Map(t, renderer);
+        SDL_RenderCopy(renderer, t, NULL, NULL);
+        SDL_RenderCopy(renderer, Red_Car.texture, NULL, &Red_Car.rect);
+        SDL_RenderCopy(renderer, Blue_Car.texture, NULL, &Blue_Car.rect);
+        SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(renderer, &s);
+        SDL_Rect play = {180,250,250,250};
+        Set_Play(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &play);
+        t = nullptr;
+       
+        check_click_basic_button();
+        draw_menu_basic_option();
+        SDL_RenderPresent(renderer);
+    }
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
 }
@@ -729,33 +770,89 @@ void draw_menu_lose(){
 }
 void draw_menu_basic_option(){
     SDL_Texture* t;
-    SDL_Rect  mute = {390,660,100,100},help = {110,660,100,100}, Sound = {260,660,100,100}, QuitGame = {20,20, 40, 40};
-    if(!music){
+    if(music){
         Set_Musicon(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        SDL_RenderCopy(renderer, t, nullptr, &Rmute);
         t = nullptr;
     } else {
         Set_Musicoff(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &mute);
+        SDL_RenderCopy(renderer, t, nullptr, &Rmute);
         t = nullptr;
     }
-    if(!sound){
+    if(sound){
         Set_Unmute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &Sound);
+        SDL_RenderCopy(renderer, t, nullptr, &RSound);
         t = nullptr;
     } else {
         Set_Mute(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, &Sound);
+        SDL_RenderCopy(renderer, t, nullptr, &RSound);
         t = nullptr;
     }
     Set_Help(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &help);
+    SDL_RenderCopy(renderer, t, nullptr, &Rhelp);
     t = nullptr;
     Set_Quitgame(t, renderer);
-    SDL_RenderCopy(renderer, t, nullptr, &QuitGame);
+    SDL_RenderCopy(renderer, t, nullptr, &RQuitGame);
     t = nullptr;
     SDL_DestroyTexture(t);
 }
-void check_menu_mouse(SDL_Event &e){
-    
+bool check_click_mouse(SDL_Rect s){
+    if(s.x > mouse_x){
+        return false;
+    }
+    if(s.x + s.w < mouse_x){
+        return false;
+    }
+    if(s.y > mouse_y){
+        return false;
+    }
+    if(s.y + s.h < mouse_y){
+        return false;
+    }
+    return true;
 }
+void check_click_basic_button(){
+    if(check_click_mouse(Rmute)){
+        music = music == true? false : true;
+    }
+    if(check_click_mouse(RSound)){
+        sound = sound == true? false : true;
+    }
+    if(check_click_mouse(Rhelp)){
+        draw_tutorial();
+    }
+    if(check_click_mouse(RQuitGame)){
+        chose = true;
+        quitgame = true;
+    }
+}
+void draw_tutorial(){
+    SDL_Texture* t;
+    SDL_Event e;
+    SDL_Rect s;
+    s.x = 0;
+    s.y = 0;
+    s.w = SCREEN_WIDTH;
+    s.h = SCREEN_HEIGHT;
+    while(Mouse != BACK){
+        Mouse = NOTHING;
+        Set_Classic_Map(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, nullptr);
+        t = nullptr;
+        SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(renderer, &s);
+        Set_Tutorial(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, nullptr);
+        t = nullptr;
+        Set_Back(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &RBack);
+        t = nullptr;
+        SDL_RenderPresent(renderer);
+        if(Mouse!=BACK) Mouse_Event(e);
+        if(check_click_mouse(RBack)){
+            Mouse = BACK;
+        }
+    }
+}
+

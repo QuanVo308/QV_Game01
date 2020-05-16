@@ -87,7 +87,7 @@ const int Car_y = 650;
 void initIMG();
 void IMGError_Prinft(string error);
 void Set_Red_Car(SDL_Texture* &car, SDL_Renderer* renderer);
-void Set_Clasic_Map(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Classic_Map(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Blue_Score(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Red_Score(SDL_Texture* &score, SDL_Renderer* renderer);
 void Set_Blue_Car(SDL_Texture* &car, SDL_Renderer* renderer);

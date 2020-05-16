@@ -52,7 +52,7 @@ void Set_Blue_Score(SDL_Texture* &score, SDL_Renderer* renderer){
     }
 }
 
-void Set_Clasic_Map(SDL_Texture* &map, SDL_Renderer* renderer){
+void Set_Classic_Map(SDL_Texture* &map, SDL_Renderer* renderer){
     map = IMG_LoadTexture(renderer, classic_map.c_str());
     if( map == nullptr){
         IMGError_Prinft("Classic Map loading failed: ");
