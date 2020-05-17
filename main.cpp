@@ -465,6 +465,8 @@ bool check_collision(SDL_Rect a, SDL_Rect b){
 void Set_Object(){
     Set_Red_Car(Red_Car.texture, renderer);
     Set_Blue_Car(Blue_Car.texture, renderer);
+    Blue_Car.rect.y = Car_y;
+    Red_Car.rect.y = Car_y;
     Set_Classic_Map(map, renderer);
     for(int i=0;i < Obj_Quantity; i++){
         Set_Blue_Score(Blue_Score[i].texture, renderer);
@@ -477,7 +479,6 @@ void Set_Object(){
         Set_Rect(Blue_Score[i].rect, LB_Line, SCREEN_HEIGHT, CAR_WIDTH, CAR_WIDTH); //  x1 55  x2 150
         Set_Rect(Red_Obs[i].rect, LR_Line, SCREEN_HEIGHT, CAR_WIDTH, CAR_WIDTH);  // x1 250 x2 340
         Set_Rect(Blue_Obs[i].rect, LB_Line, SCREEN_HEIGHT, CAR_WIDTH, CAR_WIDTH); //  x1 55  x2 150
-        
     }
 }
 void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, int y, double zoom ){
