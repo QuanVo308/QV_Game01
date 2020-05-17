@@ -11,9 +11,10 @@ enum Button{
     HOME,
     QUITGAME,
     BACK,
+    PAUSE,
     NOTHING,
 };
-Button Mouse;
+Button button;
 bool die, chose;
 int score = 0, mouse_x, mouse_y;
 bool quit = false;
@@ -34,6 +35,7 @@ void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
 void Play_Game();
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w);
 void draw();
+void draw_without_present();
 void Object_move(bool &appearR , bool &appearB);
 void Car_move(SDL_Event &e);
 bool check_collision(SDL_Rect a, SDL_Rect b);
@@ -61,10 +63,10 @@ int main() {
     SDL_Event e;
     while(!quitgame){
         draw_menu();
-        //waitUntilKeyPressed();
-        //cho vao draw luon
-        switch(Mouse){
+        switch(button){
             case PLAY:
+                die = false;
+                quit = false;
                 Play_Game();
                 break;
             case QUITGAME:
@@ -84,9 +86,6 @@ int main() {
     waitUntilKeyPressed();
     Play_Game(); */
     //end game
-    if(die){
-        waitUntilKeyPressed();
-    }
     text.Destroy();
     SDL_DestroyTexture(map);
     quitSDL(window, renderer);
@@ -108,54 +107,36 @@ int Random(int a, int b){
 void Play_Game(){
     quit = false;
     SDL_Event e;
-    //Set_Object();
+    Set_Object();
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     draw();
+    SDL_RenderPresent(renderer);
     score = 0;
-    /*while(!quit){
-        while (!quit){
+    while(!quit && !quitgame){
+        while(button != PAUSE && !quit && !quitgame){
             bool appearRS = true, appearBS = true;
-        //    bool appearRO = true, appearBO = true;
-            if(e.type == SDL_QUIT){
-                quit = true;
-            }
-            Car_move(e);
-            Object_move(appearRS ,appearBS);
-            SDL_Delay(10);
-            draw();
-             
-            if(SDL_PollEvent(&e) == 0) continue;
-            cout << "Score: " << score << endl;
+            //    bool appearRO = true, appearBO = true;
+                if(e.type == SDL_QUIT){
+                    quit = true;
+                }
+                Car_move(e);
+                Object_move(appearRS ,appearBS);
+                SDL_Delay(10);
+                draw();
+                if(SDL_PollEvent(&e) == 0) continue;
+                cout << "Score: " << score << endl;
         }
-        quit = false;
-        draw_menu_pause();
-        switch(Mouse){
-            case PLAYAGAIN:
-                score = 0;
-                Set_Object();
-                break;
-            case MUSIC:
-                music = music == true? false : true;
-                break;
-            case SOUND:
-                sound = sound == true? false : true;
-                break;
-            case HELP:
-                break;
-            case HOME:
-                quit = true;
-                break;
-            case QUITGAME:
-                quit = true;
-                quitgame = true;
-                break;
-            case BACK:
-                break;
+        if(button == PAUSE){
+                button = NOTHING;
+                draw_menu_pause();
         }
-    } */
-    
-    while (!quit){
+        if(die){
+            waitUntilKeyPressed();
+            draw_menu_lose();
+        }
+    }
+   /* while (!quit){
         bool appearRS = true, appearBS = true;
     //    bool appearRO = true, appearBO = true;
         if(e.type == SDL_QUIT){
@@ -168,10 +149,13 @@ void Play_Game(){
          
         if(SDL_PollEvent(&e) == 0) continue;
         cout << "Score: " << score << endl;
-    }
+    }*/
     
     
    // end game
+    if(die) {
+        Set_Object();
+    }
     Blue_Car.Texture_Destroy();
     Red_Car.Texture_Destroy();
     for(int i=0; i < Obj_Quantity ;i++){
@@ -192,6 +176,7 @@ void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, b
             case SDLK_s: s = true; break;
             case SDLK_d: d = true; break;
             case SDLK_a: a = true; break;
+            case SDLK_p: button = PAUSE; break;
             default: break;
         }
     }
@@ -206,7 +191,7 @@ void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, b
             case SDLK_s: s = false; break;
             case SDLK_d: d = false; break;
             case SDLK_a: a = false; break;
-            case SDLK_p: quit = true;; break;
+           // case SDLK_p: button = PAUSE; break;
             default: break;
         }
     }
@@ -241,9 +226,30 @@ void draw(){
     print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
     print_text(20, 255, 255, 255, to_string(score), 420, 400, 1.5);
     SDL_RenderPresent(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+   /* SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);*/
     SDL_RenderCopy(renderer, map, NULL, NULL);
+}
+void draw_without_present(){
+    SDL_RenderCopy(renderer, map, NULL, NULL);
+    if(!die){
+        SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, nullptr, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle, nullptr, SDL_FLIP_NONE);
+    } else {
+      // waitUntilKeyPressed();
+    }
+    
+    for(int i =0; i < Obj_Quantity; i++){
+        SDL_RenderCopy(renderer, Red_Score[i].texture, NULL, &Red_Score[i].rect);
+        SDL_RenderCopy(renderer, Blue_Score[i].texture, NULL, &Blue_Score[i].rect);
+        SDL_RenderCopy(renderer, Red_Obs[i].texture, NULL, &Red_Obs[i].rect);
+        SDL_RenderCopy(renderer, Blue_Obs[i].texture, NULL, &Blue_Obs[i].rect);
+       }
+    print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
+    print_text(20, 255, 255, 255, to_string(score), 420, 400, 1.5);
+    //SDL_RenderPresent(renderer);
+   // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+   // SDL_RenderClear(renderer);
 }
 void Object_move(bool &appearR , bool &appearB){
     for(int i =0; i < Obj_Quantity; i++){
@@ -521,7 +527,7 @@ void fix_Bposition_collision(Object Blue_Obs){
             Blue_Car.rect.x += 11;
             t.x = CAR_WIDTH;
             t.y = 0;
-            cout << t.x << " " << t.y << endl;
+           // cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle-Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision2r" << endl;
         } else {
@@ -530,7 +536,7 @@ void fix_Bposition_collision(Object Blue_Obs){
             Blue_Car.rect.x += 8;
             t.x = CAR_WIDTH - (Blue_Car.rect.x+CAR_WIDTH - Blue_Obs.rect.x);
             t.y = Blue_Obs.rect.y - Blue_Car.rect.y;
-            cout << t.x << " " << t.y << endl;
+            //cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle-Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision3r" << endl;
         }
@@ -549,7 +555,7 @@ void fix_Bposition_collision(Object Blue_Obs){
             Blue_Car.rect.x -= 7;
             t.x = 0;
             t.y = 0;
-            cout << t.x << " " << t.y << endl;
+            //cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle+Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision2" << endl;
         } else {
@@ -558,7 +564,7 @@ void fix_Bposition_collision(Object Blue_Obs){
             Blue_Car.rect.x -= 3;
             t.x = -Blue_Car.rect.x+CAR_WIDTH + Blue_Obs.rect.x;
             t.y = Blue_Obs.rect.y - Blue_Car.rect.y ;
-            cout << t.x << " " << t.y << endl;
+            //cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle+Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision3" << endl;
         }
@@ -588,7 +594,7 @@ void fix_Rposition_collision(Object Red_Obs){
             Red_Car.rect.x += 9;
             t.x = CAR_WIDTH;
             t.y = 0;
-            cout << t.x << " " << t.y << endl;
+            //cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision2r" << endl;
         } else {
@@ -597,7 +603,7 @@ void fix_Rposition_collision(Object Red_Obs){
             Red_Car.rect.x += 1;
             t.x = CAR_WIDTH - (Red_Car.rect.x+CAR_WIDTH - Red_Obs.rect.x);
             t.y = Red_Obs.rect.y - Red_Car.rect.y;
-            cout << t.x << " " << t.y << endl;
+           // cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle-Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision3r" << endl;
         }
@@ -616,7 +622,7 @@ void fix_Rposition_collision(Object Red_Obs){
             Red_Car.rect.x -= 2;
             t.x = 0;
             t.y = 0;
-            cout << t.x << " " << t.y << endl;
+            //cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision2" << endl;
         } else {
@@ -625,7 +631,7 @@ void fix_Rposition_collision(Object Red_Obs){
             Red_Car.rect.x += 3;
             t.x = -Red_Car.rect.x+CAR_WIDTH + Red_Obs.rect.x;
             t.y = Red_Obs.rect.y - Red_Car.rect.y ;
-            cout << t.x << " " << t.y << endl;
+            //cout << t.x << " " << t.y << endl;
             SDL_RenderCopyEx(renderer, Red_Car.texture, NULL, &Red_Car.rect, Red_Car.angle+Car_Angle_Change, &t, SDL_FLIP_NONE);
             cout << "collision3" << endl;
         }
@@ -638,9 +644,6 @@ void Mouse_Event(SDL_Event e){
     mouse_x = 0;
     mouse_y = 0;
     while(!check){
-        if(e.type == SDL_MOUSEBUTTONDOWN) {
-            cout << "ha" << endl;
-        }
         if(SDL_WaitEvent(&e)){
             if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_QUIT){
             mouse_x = e.motion.x;
@@ -698,12 +701,12 @@ void draw_menu(){
     SDL_RenderPresent(renderer);
     while(chose != true){
         cout << "a" << endl;
-        Mouse = NOTHING;
+        button = NOTHING;
         chose = false;
         Mouse_Event(e);
         if(check_click_mouse(play)){
             chose = true;
-            Mouse = PLAY;
+            button = PLAY;
         }
         Set_Classic_Map(t, renderer);
         SDL_RenderCopy(renderer, t, NULL, NULL);
@@ -727,10 +730,12 @@ void draw_menu(){
 void draw_menu_pause(){
     SDL_Texture* t;
     SDL_Rect s;
+    SDL_Event e;
     s.x = 0;
     s.y = 0;
     s.w = SCREEN_WIDTH;
     s.h = SCREEN_HEIGHT;
+    draw_without_present();
     SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderFillRect(renderer, &s);
@@ -743,16 +748,47 @@ void draw_menu_pause(){
     t = nullptr;
     draw_menu_basic_option();
     SDL_RenderPresent(renderer);
+    chose = false;
+    while(chose != true){
+        button = NOTHING;
+        Mouse_Event(e);
+        if(check_click_mouse(play)){
+            chose = true;
+            quit = false;
+        }
+        if(check_click_mouse(playagain)){
+            chose = true;
+            Set_Object();
+            score = 0;
+        }
+        draw_without_present();
+        SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(renderer, &s);
+        SDL_Rect playagain = {205,430,200,200}, play = {205,200,200,200};
+        Set_Playagain(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &playagain);
+        t = nullptr;
+        Set_Play(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &play);
+        t = nullptr;
+        check_click_basic_button();
+        draw_menu_basic_option();
+        SDL_RenderPresent(renderer);
+    }
+    
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
 }
 void draw_menu_lose(){
     SDL_Texture* t;
     SDL_Rect s;
+    SDL_Event e;
     s.x = 0;
     s.y = 0;
     s.w = SCREEN_WIDTH;
     s.h = SCREEN_HEIGHT;
+    draw_without_present();
     SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderFillRect(renderer, &s);
@@ -765,6 +801,41 @@ void draw_menu_lose(){
     t = nullptr;
     draw_menu_basic_option();
     SDL_RenderPresent(renderer);
+    chose = false;
+    while(chose != true){
+        button = NOTHING;
+        Mouse_Event(e);
+        if(check_click_mouse(home)){
+            chose = true;
+            quit = true;
+        }
+        if(check_click_mouse(playagain)){
+            quit = false;
+            die = false;
+            quitgame = false;
+            chose = true;
+            Set_Object();
+            //draw();
+           // waitUntilKeyPressed();
+            score = 0;
+        }
+        draw_without_present();
+        SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_RenderFillRect(renderer, &s);
+        SDL_Rect playagain = {205,430,200,200}, home = {205,200,200,200};
+        Set_Playagain(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &playagain);
+        t = nullptr;
+        Set_Home(t, renderer);
+        SDL_RenderCopy(renderer, t, nullptr, &home);
+        t = nullptr;
+        check_click_basic_button();
+        draw_menu_basic_option();
+        SDL_RenderPresent(renderer);
+    }
+    
+    cout << "check" << endl;
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
 }
@@ -834,11 +905,12 @@ void draw_tutorial(){
     s.y = 0;
     s.w = SCREEN_WIDTH;
     s.h = SCREEN_HEIGHT;
-    while(Mouse != BACK){
-        Mouse = NOTHING;
-        Set_Classic_Map(t, renderer);
-        SDL_RenderCopy(renderer, t, nullptr, nullptr);
-        t = nullptr;
+    while(button != BACK){
+        button = NOTHING;
+        //Set_Classic_Map(t, renderer);
+        //SDL_RenderCopy(renderer, t, nullptr, nullptr);
+       // t = nullptr;
+        draw_without_present();
         SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_RenderFillRect(renderer, &s);
@@ -849,9 +921,9 @@ void draw_tutorial(){
         SDL_RenderCopy(renderer, t, nullptr, &RBack);
         t = nullptr;
         SDL_RenderPresent(renderer);
-        if(Mouse!=BACK) Mouse_Event(e);
+        if(button!=BACK) Mouse_Event(e);
         if(check_click_mouse(RBack)){
-            Mouse = BACK;
+            button = BACK;
         }
     }
 }
