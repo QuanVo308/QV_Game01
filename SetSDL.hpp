@@ -10,12 +10,14 @@
 #define SetSDL_hpp
 
 #include <iostream>
+#include <iostream>
 #include <vector>
 #include <cmath>
 #include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include <thread>
 #include <ctime>
 
@@ -39,5 +41,6 @@ void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
 void logSDLError(ostream& os, const string &msg, bool fatal = false);
 void initSDL(SDL_Window* &window, SDL_Renderer* &renderer);
 void initTTF();
+void init_mixer();
 
 #endif /* SetSDL_hpp */

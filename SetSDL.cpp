@@ -7,15 +7,7 @@
 //
 
 #include "SetSDL.hpp"
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <cstring>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <thread>
-#include <ctime>
+
 
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer)
@@ -101,3 +93,9 @@ bool Text::loadFromRenderedText(string textureText, SDL_Color color, SDL_Rendere
     //Return success
     return texture != nullptr;
 }
+void init_mixer(){
+    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
+        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+}
+

@@ -28,14 +28,10 @@ void Set_Red_Car(SDL_Texture* &car, SDL_Renderer* renderer){
     }
 }
 void Set_Blue_Car(SDL_Texture* &car, SDL_Renderer* renderer){
-    //SDL_Surface* surface = nullptr;
-    //surface = IMG_Load(blue_car.c_str());
-    //car = SDL_CreateTextureFromSurface(renderer, surface);
     car = IMG_LoadTexture(renderer, blue_car.c_str());
     if( car == nullptr){
         IMGError_Prinft("Blue Car loading failed: ");
     }
-    //SDL_FreeSurface(surface);
 }
 
 void Set_Red_Score(SDL_Texture* &score, SDL_Renderer* renderer){
@@ -150,5 +146,32 @@ void Set_Back(SDL_Texture* &map, SDL_Renderer* renderer){
         IMGError_Prinft("Back loading failed: ");
     }
 }
+void Set_Background( Mix_Music *&gMusic  ){
+    gMusic = Mix_LoadMUS( Sbackground.c_str());
+    if( gMusic == NULL ){
+        printf( "Failed to load background music! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+}
+void Set_Lose( Mix_Chunk *& chunk  ){
+    chunk = Mix_LoadWAV( Slose.c_str());
+    if( chunk == NULL ){
+        printf( "Failed to load lose chunk! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+}
+void Set_Hit_Score( Mix_Chunk *& chunk  ){
+    chunk = Mix_LoadWAV( Sscore.c_str());
+    if( chunk == NULL ){
+        printf( "Failed to load hit score chunk! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+}
+void Set_Click( Mix_Chunk *& chunk  ){
+    chunk = Mix_LoadWAV( Sclick.c_str());
+    if( chunk == NULL ){
+        printf( "Failed to load click chunk! SDL_mixer Error: %s\n", Mix_GetError() );
+    }
+}
+
+
+
 
 

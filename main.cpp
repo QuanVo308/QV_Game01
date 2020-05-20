@@ -16,7 +16,7 @@ enum Button{
 };
 Button button;
 bool die, chose;
-int score = 0, mouse_x, mouse_y;
+int score = 0, mouse_x, mouse_y, highscore = 1000;
 bool quit = false;
 bool quitgame = false, pause = false;
 bool music = true;
@@ -29,6 +29,8 @@ Text text;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 SDL_Rect  Rmute = {390,660,100,100},Rhelp = {110,660,100,100}, RSound = {260,660,100,100}, RQuitGame = {20,20, 40, 40}, RBack = {240, 660, 100, 100};
+Mix_Chunk *lose = nullptr, *click = nullptr, *Hit_Score = nullptr;
+Mix_Music *background = nullptr;
 
 int Random(int a, int b);
 void Set_Rect(SDL_Rect &rect, int x, int y, int w, int h);
@@ -52,15 +54,25 @@ void draw_menu();
 void draw_menu_pause();
 void draw_menu_lose();
 bool check_click_mouse(SDL_Rect s);
+void quit_mixer();
+void quitObj();
+void Set_mixer();
+void click_sound();
+void hit_score_sound();
+void lose_sound();
 
 int main() {
     initSDL(window, renderer);
     initIMG();
     initTTF();
+    init_mixer();
     Set_Object();
+    Set_mixer();
     draw_begin();
+    //draw_menu_lose();
+    Mix_PlayMusic( background, -1 );
     waitUntilKeyPressed();
-    SDL_Event e;
+   // SDL_Event e;
     while(!quitgame){
         draw_menu();
         switch(button){
@@ -75,20 +87,14 @@ int main() {
             default: break;
         }
     }
-   /* draw();
-    draw_menu();
-    waitUntilKeyPressed();
-    draw();
-    draw_menu_pause();
-    waitUntilKeyPressed();
-    draw();
-    draw_menu_lose();
-    waitUntilKeyPressed();
-    Play_Game(); */
+  
+    
     //end game
     text.Destroy();
     SDL_DestroyTexture(map);
+    quitObj();
     quitSDL(window, renderer);
+    quit_mixer();
     IMG_Quit();
     TTF_Quit();
 }
@@ -136,34 +142,30 @@ void Play_Game(){
             draw_menu_lose();
         }
     }
-   /* while (!quit){
-        bool appearRS = true, appearBS = true;
-    //    bool appearRO = true, appearBO = true;
-        if(e.type == SDL_QUIT){
-            quit = true;
-        }
-        Car_move(e);
-        Object_move(appearRS ,appearBS);
-        SDL_Delay(10);
-        draw();
-         
-        if(SDL_PollEvent(&e) == 0) continue;
-        cout << "Score: " << score << endl;
-    }*/
-    
-    
-   // end game
     if(die) {
         Set_Object();
     }
+}
+void quit_mixer(){
+    Mix_FreeChunk( lose);
+    Mix_FreeChunk( Hit_Score );
+    Mix_FreeChunk( click );
+    lose = NULL;
+    Hit_Score = NULL;
+    click = NULL;
+    Mix_FreeMusic( background );
+    background = NULL;
+    Mix_Quit();
+}
+void quitObj(){
     Blue_Car.Texture_Destroy();
     Red_Car.Texture_Destroy();
     for(int i=0; i < Obj_Quantity ;i++){
         Blue_Score[i].Texture_Destroy();
         Red_Score[i].Texture_Destroy();
-    
     }
- }
+}
+
 void KEY_FREEMOVE_ACTION( SDL_Event &e, bool &quit, bool &l, bool &r, bool &u, bool &dw, bool &s, bool &a, bool &d, bool &w){
     if(e.type == SDL_KEYDOWN){
         switch(e.key.keysym.sym){
@@ -254,11 +256,13 @@ void draw_without_present(){
 void Object_move(bool &appearR , bool &appearB){
     for(int i =0; i < Obj_Quantity; i++){
         if( SDL_HasIntersection(&Blue_Car.rect, &Blue_Score[i].rect) ){
+            hit_score_sound();
             Blue_Score[i].rect.y = SCREEN_HEIGHT;
             Blue_Score[i].run = false;
             score++;
         }
         if( check_collision(Red_Car.rect, Red_Score[i].rect) ){
+            hit_score_sound();
             Red_Score[i].rect.y = SCREEN_HEIGHT;
             Red_Score[i].run = false;
             score++;
@@ -286,6 +290,7 @@ void Object_move(bool &appearR , bool &appearB){
         Blue_Car.rect.h-=30;
         Blue_Car.rect.w+=6;
         if( SDL_HasIntersection(&Blue_Car.rect, &Blue_Obs[i].rect) ){
+            lose_sound();
             Blue_Obs[i].run = false;
             die = true;
             quit = true;
@@ -300,6 +305,7 @@ void Object_move(bool &appearR , bool &appearB){
         Red_Car.rect.h-=30;
         Red_Car.rect.w+=6;
         if( SDL_HasIntersection(&Red_Car.rect, &Red_Obs[i].rect) ){
+            lose_sound();
             Red_Obs[i].run = false;
             die = true;
             quit = true;
@@ -387,7 +393,7 @@ void Car_move(SDL_Event &e){
         if(check_dw == true){
             dw_check_right = dw_check_right == -1 ? 1:-1;
         }
-            check_dw = false;
+        check_dw = false;
     } else {
         check_dw = true;
     }
@@ -420,7 +426,7 @@ void Car_move(SDL_Event &e){
         if(check_s == true){
             s_check_right = s_check_right == -1 ? 1:-1;
         }
-            check_s = false;
+        check_s = false;
     } else {
         check_s = true;
     }
@@ -697,7 +703,7 @@ void draw_menu(){
     SDL_Rect play = {180,250,250,250};
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
-    t = nullptr;
+    SDL_DestroyTexture(t);
     draw_menu_basic_option();
     SDL_RenderPresent(renderer);
     while(chose != true){
@@ -706,6 +712,7 @@ void draw_menu(){
         chose = false;
         Mouse_Event(e);
         if(check_click_mouse(play)){
+            click_sound();
             chose = true;
             button = PLAY;
         }
@@ -719,7 +726,7 @@ void draw_menu(){
         SDL_Rect play = {180,250,250,250};
         Set_Play(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &play);
-        t = nullptr;
+        SDL_DestroyTexture(t);
        
         check_click_basic_button();
         draw_menu_basic_option();
@@ -743,10 +750,10 @@ void draw_menu_pause(){
     SDL_Rect playagain = {205,430,200,200}, play = {205,200,200,200};
     Set_Playagain(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &playagain);
-    t = nullptr;
+    SDL_DestroyTexture(t);
     Set_Play(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &play);
-    t = nullptr;
+    SDL_DestroyTexture(t);
     draw_menu_basic_option();
     SDL_RenderPresent(renderer);
     chose = false;
@@ -754,10 +761,12 @@ void draw_menu_pause(){
         button = NOTHING;
         Mouse_Event(e);
         if(check_click_mouse(play)){
+            click_sound();
             chose = true;
             quit = false;
         }
         if(check_click_mouse(playagain)){
+            click_sound();
             chose = true;
             Set_Object();
             score = 0;
@@ -769,10 +778,10 @@ void draw_menu_pause(){
         SDL_Rect playagain = {205,430,200,200}, play = {205,200,200,200};
         Set_Playagain(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &playagain);
-        t = nullptr;
+        SDL_DestroyTexture(t);
         Set_Play(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &play);
-        t = nullptr;
+        SDL_DestroyTexture(t);
         check_click_basic_button();
         draw_menu_basic_option();
         SDL_RenderPresent(renderer);
@@ -796,28 +805,35 @@ void draw_menu_lose(){
     SDL_Rect playagain = {205,430,200,200}, home = {205,200,200,200};
     Set_Playagain(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &playagain);
-    t = nullptr;
+    SDL_DestroyTexture(t);
     Set_Home(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &home);
-    t = nullptr;
+    SDL_DestroyTexture(t);
     draw_menu_basic_option();
+    if(score <= highscore){
+        print_text(20, 255, 255, 255, "SCORE:", 205, 120, 2);
+        print_text(20, 255, 255, 255, to_string(score), 365, 120, 2);
+    } else {
+        print_text(20, 255, 255, 255, "HIGHSCORE:", 130, 120, 2);
+        print_text(20, 255, 255, 255, to_string(score), 390, 120, 2);
+    }
     SDL_RenderPresent(renderer);
     chose = false;
     while(chose != true){
         button = NOTHING;
         Mouse_Event(e);
         if(check_click_mouse(home)){
+            click_sound();
             chose = true;
             quit = true;
         }
         if(check_click_mouse(playagain)){
+            click_sound();
             quit = false;
             die = false;
             quitgame = false;
             chose = true;
             Set_Object();
-            //draw();
-           // waitUntilKeyPressed();
             score = 0;
         }
         draw_without_present();
@@ -827,12 +843,19 @@ void draw_menu_lose(){
         SDL_Rect playagain = {205,430,200,200}, home = {205,200,200,200};
         Set_Playagain(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &playagain);
-        t = nullptr;
+        SDL_DestroyTexture(t);
         Set_Home(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &home);
-        t = nullptr;
+        SDL_DestroyTexture(t);
         check_click_basic_button();
         draw_menu_basic_option();
+        if(score <= highscore){
+            print_text(20, 255, 255, 255, "SCORE:", 205, 120, 2);
+            print_text(20, 255, 255, 255, to_string(score), 365, 120, 2);
+        } else {
+            print_text(20, 255, 255, 255, "HIGHSCORE:", 130, 120, 2);
+            print_text(20, 255, 255, 255, to_string(score), 390, 120, 2);
+        }
         SDL_RenderPresent(renderer);
     }
     
@@ -845,27 +868,26 @@ void draw_menu_basic_option(){
     if(music){
         Set_Musicon(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &Rmute);
-        t = nullptr;
+        SDL_DestroyTexture(t);
     } else {
         Set_Musicoff(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &Rmute);
-        t = nullptr;
+        SDL_DestroyTexture(t);
     }
     if(sound){
         Set_Unmute(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &RSound);
-        t = nullptr;
+        SDL_DestroyTexture(t);
     } else {
         Set_Mute(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &RSound);
-        t = nullptr;
+        SDL_DestroyTexture(t);
     }
     Set_Help(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &Rhelp);
-    t = nullptr;
+    SDL_DestroyTexture(t);
     Set_Quitgame(t, renderer);
     SDL_RenderCopy(renderer, t, nullptr, &RQuitGame);
-    t = nullptr;
     SDL_DestroyTexture(t);
 }
 bool check_click_mouse(SDL_Rect s){
@@ -885,15 +907,28 @@ bool check_click_mouse(SDL_Rect s){
 }
 void check_click_basic_button(){
     if(check_click_mouse(Rmute)){
-        music = music == true? false : true;
+        //music = music == true? false : true;
+        if(music == true){
+            music = false;
+            click_sound();
+            Mix_PauseMusic();
+        } else {
+            music = true;
+            click_sound();
+            Mix_ResumeMusic();
+        }
     }
     if(check_click_mouse(RSound)){
         sound = sound == true? false : true;
+        click_sound();
     }
     if(check_click_mouse(Rhelp)){
+        click_sound();
         draw_tutorial();
+        click_sound();
     }
     if(check_click_mouse(RQuitGame)){
+        click_sound();
         chose = true;
         quitgame = true;
     }
@@ -908,19 +943,16 @@ void draw_tutorial(){
     s.h = SCREEN_HEIGHT;
     while(button != BACK){
         button = NOTHING;
-        //Set_Classic_Map(t, renderer);
-        //SDL_RenderCopy(renderer, t, nullptr, nullptr);
-       // t = nullptr;
         draw_without_present();
         SDL_SetRenderDrawColor(renderer, 0,0, 0, 140);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_RenderFillRect(renderer, &s);
         Set_Tutorial(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, nullptr);
-        t = nullptr;
+        SDL_DestroyTexture(t);
         Set_Back(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &RBack);
-        t = nullptr;
+        SDL_DestroyTexture(t);
         SDL_RenderPresent(renderer);
         if(button!=BACK) Mouse_Event(e);
         if(check_click_mouse(RBack)){
@@ -928,4 +960,24 @@ void draw_tutorial(){
         }
     }
 }
-
+void Set_mixer(){
+    Set_Click(click);
+    Set_Hit_Score(Hit_Score);
+    Set_Background(background);
+    Set_Lose(lose);
+}
+void click_sound(){
+    if(sound == true){
+        Mix_PlayChannel( -1, click, 0 );
+    }
+}
+void hit_score_sound(){
+    if(sound == true){
+        Mix_PlayChannel( -1, Hit_Score, 0 );
+    }
+}
+void lose_sound(){
+    if(sound == true){
+        Mix_PlayChannel( -1, lose, 0 );
+    }
+}

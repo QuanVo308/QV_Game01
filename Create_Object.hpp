@@ -73,6 +73,10 @@ const string musicoff = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Butto
 const string Quitgame = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/quit.png";
 const string tutorial = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/MAP/help.png";
 const string back = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Button/back.png";
+const string Sscore = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/Score.wav";
+const string Slose = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/Lose.wav";
+const string Sbackground = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/Background.wav";
+const string Sclick = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/click.wav";
 
 const int Obj_Quantity = 10;
 const int Obj_Speed = 7;
@@ -106,6 +110,10 @@ void Set_Musicoff(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Quitgame(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Tutorial(SDL_Texture* &map, SDL_Renderer* renderer);
 void Set_Back(SDL_Texture* &map, SDL_Renderer* renderer);
+void Set_Click( Mix_Chunk *& chunk  );
+void Set_Hit_Score( Mix_Chunk *& chunk  );
+void Set_Lose( Mix_Chunk *& chunk  );
+void Set_Background( Mix_Music *&gMusic  );
 
 
 #endif 
