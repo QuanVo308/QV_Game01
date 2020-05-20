@@ -60,6 +60,8 @@ void Set_mixer();
 void click_sound();
 void hit_score_sound();
 void lose_sound();
+void set_highscore();
+int get_highscore();
 
 int main() {
     initSDL(window, renderer);
@@ -87,7 +89,6 @@ int main() {
             default: break;
         }
     }
-  
     
     //end game
     text.Destroy();
@@ -134,8 +135,8 @@ void Play_Game(){
                 cout << "Score: " << score << endl;
         }
         if(button == PAUSE){
-                button = NOTHING;
-                draw_menu_pause();
+            button = NOTHING;
+            draw_menu_pause();
         }
         if(die){
             waitUntilKeyPressed();
@@ -705,6 +706,8 @@ void draw_menu(){
     SDL_RenderCopy(renderer, t, nullptr, &play);
     SDL_DestroyTexture(t);
     draw_menu_basic_option();
+    print_text(20, 255, 255, 255, "HIGHSCORE:", 155, 140, 2);
+    print_text(20, 255, 255, 255, to_string(get_highscore()), 415, 140, 2);
     SDL_RenderPresent(renderer);
     while(chose != true){
         cout << "a" << endl;
@@ -727,9 +730,11 @@ void draw_menu(){
         Set_Play(t, renderer);
         SDL_RenderCopy(renderer, t, nullptr, &play);
         SDL_DestroyTexture(t);
-       
+    
         check_click_basic_button();
         draw_menu_basic_option();
+        print_text(20, 255, 255, 255, "HIGHSCORE:", 155, 140, 2);
+        print_text(20, 255, 255, 255, to_string(get_highscore()), 415, 140, 2);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyTexture(t);
@@ -766,6 +771,9 @@ void draw_menu_pause(){
             quit = false;
         }
         if(check_click_mouse(playagain)){
+            if(score > get_highscore()){
+                set_highscore();
+            }
             click_sound();
             chose = true;
             Set_Object();
@@ -810,12 +818,14 @@ void draw_menu_lose(){
     SDL_RenderCopy(renderer, t, nullptr, &home);
     SDL_DestroyTexture(t);
     draw_menu_basic_option();
-    if(score <= highscore){
-        print_text(20, 255, 255, 255, "SCORE:", 205, 120, 2);
-        print_text(20, 255, 255, 255, to_string(score), 365, 120, 2);
+    if(score <= get_highscore()){
+        print_text(20, 255, 255, 255, "SCORE:", 205, 110, 2);
+        print_text(20, 255, 255, 255, to_string(score), 365, 110, 2);
+        print_text(20, 255, 255, 255, "HIGHSCORE:", 220, 160, 1);
+        print_text(20, 255, 255, 255, to_string(get_highscore()), 350, 160, 1);
     } else {
-        print_text(20, 255, 255, 255, "HIGHSCORE:", 130, 120, 2);
-        print_text(20, 255, 255, 255, to_string(score), 390, 120, 2);
+        print_text(20, 255, 255, 255, "HIGHSCORE:", 155, 120, 2);
+        print_text(20, 255, 255, 255, to_string(score), 415, 120, 2);
     }
     SDL_RenderPresent(renderer);
     chose = false;
@@ -849,16 +859,20 @@ void draw_menu_lose(){
         SDL_DestroyTexture(t);
         check_click_basic_button();
         draw_menu_basic_option();
-        if(score <= highscore){
+        if(score <= get_highscore()){
             print_text(20, 255, 255, 255, "SCORE:", 205, 120, 2);
             print_text(20, 255, 255, 255, to_string(score), 365, 120, 2);
+            print_text(20, 255, 255, 255, "HIGHSCORE:", 220, 160, 1);
+            print_text(20, 255, 255, 255, to_string(get_highscore()), 350, 160, 1);
         } else {
-            print_text(20, 255, 255, 255, "HIGHSCORE:", 130, 120, 2);
-            print_text(20, 255, 255, 255, to_string(score), 390, 120, 2);
+            print_text(20, 255, 255, 255, "HIGHSCORE:", 155, 120, 2);
+            print_text(20, 255, 255, 255, to_string(score), 415, 120, 2);
         }
         SDL_RenderPresent(renderer);
     }
-    
+    if(score > get_highscore()){
+        set_highscore();
+    }
     cout << "check" << endl;
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
@@ -981,3 +995,25 @@ void lose_sound(){
         Mix_PlayChannel( -1, lose, 0 );
     }
 }
+int get_highscore(){
+    int n;
+    fstream a;
+    a.open(Highscore, ios::in);
+    if(!a.is_open()){
+        cout << "Couldn't open Highscore.txt" << endl;
+    }
+    a >> n;
+    a.close();
+    return n;
+}
+void set_highscore(){
+    int n;
+    fstream a;
+    a.open(Highscore, ios::out);
+    if(!a.is_open()){
+        cout << "Couldn't open Highscore.txt" << endl;
+    }
+    a << score;
+    a.close();
+}
+

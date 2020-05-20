@@ -77,6 +77,7 @@ const string Sscore = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSou
 const string Slose = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/Lose.wav";
 const string Sbackground = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/Background.wav";
 const string Sclick = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/GameSound/click.wav";
+const string Highscore = "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Highscore.txt";
 
 const int Obj_Quantity = 10;
 const int Obj_Speed = 7;

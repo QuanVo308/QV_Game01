@@ -19,6 +19,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 #include <thread>
+#include <fstream>
 #include <ctime>
 
 using namespace std;
