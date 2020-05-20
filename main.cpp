@@ -71,10 +71,8 @@ int main() {
     Set_Object();
     Set_mixer();
     draw_begin();
-    //draw_menu_lose();
     Mix_PlayMusic( background, -1 );
     waitUntilKeyPressed();
-   // SDL_Event e;
     while(!quitgame){
         draw_menu();
         switch(button){
@@ -123,7 +121,6 @@ void Play_Game(){
     while(!quit && !quitgame){
         while(button != PAUSE && !quit && !quitgame){
             bool appearRS = true, appearBS = true;
-            //    bool appearRO = true, appearBO = true;
                 if(e.type == SDL_QUIT){
                     quit = true;
                 }
@@ -229,8 +226,6 @@ void draw(){
     print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
     print_text(20, 255, 255, 255, to_string(score), 420, 400, 1.5);
     SDL_RenderPresent(renderer);
-   /* SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);*/
     SDL_RenderCopy(renderer, map, NULL, NULL);
 }
 void draw_without_present(){
@@ -250,9 +245,6 @@ void draw_without_present(){
        }
     print_text(20, 255, 255, 255, "SCORE", 420, 360, 1.5);
     print_text(20, 255, 255, 255, to_string(score), 420, 400, 1.5);
-    //SDL_RenderPresent(renderer);
-   // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-   // SDL_RenderClear(renderer);
 }
 void Object_move(bool &appearR , bool &appearB){
     for(int i =0; i < Obj_Quantity; i++){
@@ -647,7 +639,6 @@ void fix_Rposition_collision(Object Red_Obs){
     SDL_RenderCopyEx(renderer, Blue_Car.texture, NULL, &Blue_Car.rect, Blue_Car.angle, nullptr, SDL_FLIP_NONE);
 }
 void Mouse_Event(SDL_Event e){
-   // SDL_Event e;
     bool check = false;
     mouse_x = 0;
     mouse_y = 0;
@@ -661,11 +652,6 @@ void Mouse_Event(SDL_Event e){
             }
             }
         }
-        //if(e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_QUIT){
-               //SDL_GetMouseState(&mouse_x,&mouse_y);
-               
-   // }
-   
 }
 void draw_begin(){
     SDL_Texture* t;
@@ -710,7 +696,6 @@ void draw_menu(){
     print_text(20, 255, 255, 255, to_string(get_highscore()), 415, 140, 2);
     SDL_RenderPresent(renderer);
     while(chose != true){
-        cout << "a" << endl;
         button = NOTHING;
         chose = false;
         Mouse_Event(e);
@@ -873,7 +858,6 @@ void draw_menu_lose(){
     if(score > get_highscore()){
         set_highscore();
     }
-    cout << "check" << endl;
     SDL_DestroyTexture(t);
     SDL_RenderClear(renderer);
 }
@@ -1007,7 +991,6 @@ int get_highscore(){
     return n;
 }
 void set_highscore(){
-    int n;
     fstream a;
     a.open(Highscore, ios::out);
     if(!a.is_open()){
