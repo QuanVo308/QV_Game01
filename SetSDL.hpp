@@ -14,13 +14,14 @@
 #include <vector>
 #include <cmath>
 #include <cstring>
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL.h>
 #include <thread>
 #include <fstream>
 #include <ctime>
+
 
 using namespace std;
 struct Text{
