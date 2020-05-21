@@ -485,7 +485,7 @@ void Set_Object(){
     }
 }
 void print_text(int size_text, Uint8 r, Uint8 g, Uint8 b , string gText, int x, int y, double zoom ){
-    TTF_Font *t = TTF_OpenFont( "/Users/QuanVo/Documents/Xcode/QV_Game01/QV_Game01/Font/VNARIALB.ttf", size_text );
+    TTF_Font *t = TTF_OpenFont( TFFfont.c_str(), size_text );
     text.gFont = t;
     if( text.gFont == NULL )
        {
