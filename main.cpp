@@ -90,7 +90,6 @@ int main() {
     
     //end game
     text.Destroy();
-    SDL_DestroyTexture(map);
     quitObj();
     quitSDL(window, renderer);
     quit_mixer();
@@ -156,6 +155,7 @@ void quit_mixer(){
     Mix_Quit();
 }
 void quitObj(){
+    SDL_DestroyTexture(map);
     Blue_Car.Texture_Destroy();
     Red_Car.Texture_Destroy();
     for(int i=0; i < Obj_Quantity ;i++){
@@ -466,6 +466,10 @@ void Set_Object(){
     Set_Blue_Car(Blue_Car.texture, renderer);
     Blue_Car.rect.y = Car_y;
     Red_Car.rect.y = Car_y;
+    Red_Car.angle = 0;
+    Blue_Car.angle = 0;
+    Blue_Car.rect.x = LB_Line;
+    Red_Car.rect.x = RR_Line;
     Set_Classic_Map(map, renderer);
     for(int i=0;i < Obj_Quantity; i++){
         Set_Blue_Score(Blue_Score[i].texture, renderer);
@@ -761,6 +765,7 @@ void draw_menu_pause(){
             }
             click_sound();
             chose = true;
+            quitObj();
             Set_Object();
             score = 0;
         }
