@@ -138,6 +138,9 @@ void Play_Game(){
         if(die){
             waitUntilKeyPressed();
             draw_menu_lose();
+            if(score > get_highscore()){
+                set_highscore();
+            }
         }
     }
     if(die) {
